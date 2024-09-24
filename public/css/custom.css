@@ -1,0 +1,79 @@
+/* public/css/custom.css */
+
+/* public/css/custom.css */
+
+/* Estilo del sidebar en gris */
+.main-sidebar {
+    background-color: #f5f5f5 !important; /* Gris claro para el sidebar */
+}
+
+/* Enlaces del sidebar */
+.nav-sidebar .nav-link {
+    color: #333 !important; /* Color base para los enlaces (gris oscuro) */
+    font-size: 15px;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Estilo hover para los enlaces del sidebar */
+.nav-sidebar .nav-link:hover {
+    background-color: #009640 !important; /* Verde al hacer hover */
+    color: white !important; /* Texto blanco al hacer hover */
+}
+
+/* Enlace activo */
+.nav-sidebar .nav-link.active {
+    background-color: #007b4f !important; /* Verde oscuro para enlace activo */
+    color: white !important;
+    font-weight: bold;
+}
+
+
+/* Botones personalizados */
+.btn-primary, .btn-success, .btn-warning, .btn-danger {
+    background-color: white;
+    color: black;
+    border-color: #ccc;
+    font-size: 16px; /* Aumentar el tamaño de los botones */
+    padding: 10px 20px; /* Aumentar el padding */
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    transition: all 0.3s ease; /* Animación suave */
+}
+
+.btn-primary:hover, .btn-success:hover, .btn-warning:hover, .btn-danger:hover {
+    background-color: #009640 !important; /* Verde al hacer hover */
+    color: white !important;
+    border-color: #007b4f !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Aumentar sombra en hover */
+    transform: translateY(-2px); /* Efecto de elevación al hacer hover */
+}
+
+/* Estilo específico para el botón 'Nuevo Centro' */
+.btn-white {
+    background-color: #f5f5f5;
+    color: #009640;
+    border-color: #ccc;
+}
+
+.btn-white:hover {
+    background-color: #009640;
+    color: white;
+    border-color: #007b4f;
+}
+
+/* Estilo personalizado para el footer */
+.main-footer {
+    background-color: #009640; /* Verde SENA */
+    color: white;
+    padding: 10px;
+    border-top: 1px solid #006737;
+}
+
+.main-footer a {
+    color: white; /* Enlaces en el footer */
+}
+
+.main-footer a:hover {
+    color: #ffc107; /* Enlace en hover */
+}
