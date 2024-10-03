@@ -1,29 +1,31 @@
 @extends('adminlte::page')
 
-@section('title', 'Crear Semillero')
+@section('title', 'Editar Semillero')
 
 @section('content_header')
-    <h1>Crear Semillero</h1>
+    <h1>Editar Semillero</h1>
 @endsection
 
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Formulario de Creación de Semillero</h3>
+            <h3 class="card-title">Formulario de Edición de Semillero</h3>
         </div>
         <div class="card-body">
-            <form action="{{ route('semilleros.store') }}" method="POST">
+            <form action="{{ route('semilleros.update', $semillero->id) }}" method="POST">
                 @csrf
+                @method('PUT')
+
                 <!-- Nombre del Semillero -->
                 <div class="form-group">
                     <label for="nombre_semillero">Nombre del Semillero:</label>
-                    <input type="text" name="nombre_semillero" id="nombre_semillero" class="form-control" placeholder="Ingrese el nombre del semillero" required>
+                    <input type="text" name="nombre_semillero" id="nombre_semillero" class="form-control" value="{{ $semillero->nombre_semillero }}" required>
                 </div>
 
                 <!-- Lider del Semillero -->
                 <div class="form-group">
                     <label for="lider_semillero">Líder del Semillero:</label>
-                    <input type="text" name="lider_semillero" id="lider_semillero" class="form-control" placeholder="Ingrese el nombre del líder del semillero">
+                    <input type="text" name="lider_semillero" id="lider_semillero" class="form-control" value="{{ $semillero->lider_semillero }}">
                 </div>
 
                 <!-- Seleccionar Grupo y Línea de Investigación -->
@@ -33,7 +35,7 @@
                         @foreach($grupos as $grupo)
                             <optgroup label="Grupo: {{ $grupo->nombre_grupo }}">
                                 @foreach($grupo->lineas as $linea)
-                                    <option value="{{ $linea->pivot->id }}">
+                                    <option value="{{ $linea->pivot->id }}" {{ $semillero->grupo_linea_id == $linea->pivot->id ? 'selected' : '' }}>
                                         Línea: {{ $linea->nombre_linea }} (Grupo: {{ $grupo->nombre_grupo }})
                                     </option>
                                 @endforeach
@@ -42,8 +44,8 @@
                     </select>
                 </div>
 
-                <!-- Botón para crear el semillero -->
-                <button type="submit" class="btn btn-primary">Crear Semillero</button>
+                <!-- Botón para actualizar el semillero -->
+                <button type="submit" class="btn btn-primary">Actualizar Semillero</button>
             </form>
         </div>
     </div>

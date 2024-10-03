@@ -35,18 +35,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="id_centro">Centro Asociado</label>
-                        <select name="id_centro" id="id_centro" class="form-control" required>
-                            <option value="">Seleccione un centro</option>
-                            @foreach ($centros as $centro)
-                                <option value="{{ $centro->id }}" {{ old('id_centro', $linea->id_centro) == $centro->id ? 'selected' : '' }}>
-                                    {{ $centro->nombre_centro }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
                         <button type="submit" class="btn btn-success">Guardar Cambios</button>
                         <a href="{{ route('lineas.index') }}" class="btn btn-secondary">Cancelar</a>
                     </div>

@@ -11,7 +11,7 @@ class GrupoInvestigacionController extends Controller
 {
     public function index(Request $request)
     {
-        $grupos = GrupoInvestigacion::with(['centro', 'linea'])->paginate(10);
+        $grupos = GrupoInvestigacion::with(['centro'])->paginate(10);
         return view('grupos.index', compact('grupos'));
     }
 
@@ -19,8 +19,7 @@ class GrupoInvestigacionController extends Controller
     public function create()
     {
         $centros = Centro::all();
-        $lineas = LineaInvestigacion::all();
-        return view('grupos.create', compact('centros', 'lineas'));
+        return view('grupos.create', compact('centros'));
     }
 
     public function store(Request $request)
@@ -28,7 +27,6 @@ class GrupoInvestigacionController extends Controller
         $validatedData = $request->validate([
             'nombre_grupo' => 'required|string|max:255',
             'centro_id' => 'required|exists:centros,id',
-            'linea_id' => 'required|exists:lineas_investigacion,id',
             'lider_investigacion' => 'nullable|string|max:255',
         ]);
 
@@ -36,31 +34,46 @@ class GrupoInvestigacionController extends Controller
 
         return redirect()->route('grupos.index')->with('success', 'Grupo de investigación creado con éxito');
     }
-
-    public function show(GrupoInvestigacion $grupo)
+    public function show($id)
     {
+        $grupo = GrupoInvestigacion::with([
+            'centro.regional', 
+            'lineas',  // Cargar semilleros a través de las líneas
+        ])->findOrFail($id);
+    
         return view('grupos.show', compact('grupo'));
     }
-
-    public function edit(GrupoInvestigacion $grupo)
+    
+    public function edit($id)
     {
+        $grupo = GrupoInvestigacion::findOrFail($id);
         $centros = Centro::all();
-        $lineas = LineaInvestigacion::all();
+        $lineas = LineaInvestigacion::all(); // Todas las líneas de investigación
+
         return view('grupos.edit', compact('grupo', 'centros', 'lineas'));
     }
 
-    public function update(Request $request, GrupoInvestigacion $grupo)
+    public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        // Validamos los datos recibidos
+        $request->validate([
             'nombre_grupo' => 'required|string|max:255',
             'centro_id' => 'required|exists:centros,id',
-            'linea_id' => 'required|exists:lineas_investigacion,id',
-            'lider_investigacion' => 'nullable|string|max:255',
+            'lineas' => 'nullable|array', // Validamos que sea un array
+            'lineas.*' => 'exists:lineas_investigacion,id' // Validamos que cada línea exista
         ]);
-
-        $grupo->update($validatedData);
-
-        return redirect()->route('grupos.index')->with('success', 'Grupo de investigación actualizado con éxito');
+    
+        // Encontramos el grupo de investigación a actualizar
+        $grupo = GrupoInvestigacion::findOrFail($id);
+    
+        // Actualizamos los campos básicos del grupo
+        $grupo->update($request->only('nombre_grupo', 'lider_investigacion', 'centro_id'));
+    
+        // Sincronizamos las líneas de investigación seleccionadas
+        $grupo->lineas()->sync($request->input('lineas', []));
+    
+        // Redirigimos con un mensaje de éxito
+        return redirect()->route('grupos.index')->with('success', 'Grupo actualizado correctamente.');
     }
 
     public function destroy(GrupoInvestigacion $grupo)

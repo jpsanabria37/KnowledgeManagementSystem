@@ -1,36 +1,44 @@
-<!-- resources/views/semilleros/index.blade.php -->
 @extends('adminlte::page')
 
 @section('title', 'Semilleros')
 
 @section('content_header')
     <h1>Semilleros</h1>
-@stop
+@endsection
 
 @section('content')
-    <div class="container">
-        <a href="{{ route('semilleros.create') }}" class="btn btn-success mb-3">
-            <i class="fas fa-plus-circle"></i> Nuevo Semillero
-        </a>
+    <div class="d-flex justify-content-between mb-3">
+        <h4>Lista de Semilleros</h4>
+        <a href="{{ route('semilleros.create') }}" class="btn btn-success">Nuevo Semillero</a>
+    </div>
 
-        <table class="table table-hover">
-            <thead>
+    <table class="table table-striped">
+        <thead>
             <tr>
                 <th>ID</th>
                 <th>Nombre</th>
-                <th>Línea de Investigación Asociada</th>
+                <th>Líder</th>
+                <th>Grupo de Investigación</th>
+                <th>Línea de Investigación</th>
                 <th>Acciones</th>
             </tr>
-            </thead>
-            <tbody>
+        </thead>
+        <tbody>
             @foreach ($semilleros as $semillero)
                 <tr>
                     <td>{{ $semillero->id }}</td>
-                    <td>{{ $semillero->nombre }}</td>
-                    <td>{{ $semillero->lineaInvestigacion->nombre }}</td>
+                    <td>{{ $semillero->nombre_semillero }}</td>
+                    <td>{{ $semillero->lider_semillero }}</td>
+                    <!-- Mostrar el Grupo de Investigación asociado -->
+                    <td>{{ $semillero->grupoLinea->grupo->nombre_grupo ?? 'No asignado' }}</td>
+                    
+                    <!-- Mostrar la Línea de Investigación asociada -->
+                    <td>{{ $semillero->grupoLinea->linea->nombre_linea ?? 'No asignado' }}</td>
+                    
                     <td>
-                        <a href="{{ route('semilleros.edit', $semillero) }}" class="btn btn-warning">Editar</a>
-                        <form action="{{ route('semilleros.destroy', $semillero) }}" method="POST" style="display:inline-block;">
+                    <a href="{{ route('semilleros.show', $semillero->id) }}" class="btn btn-info">Ver</a>
+                        <a href="{{ route('semilleros.edit', $semillero->id) }}" class="btn btn-warning">Editar</a>
+                        <form action="{{ route('semilleros.destroy', $semillero->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('¿Estás seguro de eliminar este semillero?')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Eliminar</button>
@@ -38,9 +46,6 @@
                     </td>
                 </tr>
             @endforeach
-            </tbody>
-        </table>
-
-        {{ $semilleros->links() }}
-    </div>
-@stop
+        </tbody>
+    </table>
+@endsection

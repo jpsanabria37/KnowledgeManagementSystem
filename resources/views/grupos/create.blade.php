@@ -48,20 +48,7 @@
                                 </option>
                             @endforeach
                         </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="linea_id">Línea de Investigación</label>
-                        <select name="linea_id" id="linea_id" class="form-control" required>
-                            <option value="">Seleccione una línea de investigación</option>
-                            @foreach ($lineas as $linea)
-                                <option value="{{ $linea->id }}" {{ old('linea_id') == $linea->id ? 'selected' : '' }}>
-                                    {{ $linea->nombre_linea }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
+                    </div>       
                     <div class="form-group">
                         <button type="submit" class="btn btn-success">Crear Grupo</button>
                         <a href="{{ route('grupos.index') }}" class="btn btn-secondary">Cancelar</a>

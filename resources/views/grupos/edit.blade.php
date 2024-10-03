@@ -52,17 +52,19 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="linea_id">Línea de Investigación</label>
-                        <select name="linea_id" id="linea_id" class="form-control" required>
-                            <option value="">Seleccione una línea de investigación</option>
-                            @foreach ($lineas as $linea)
-                                <option value="{{ $linea->id }}" {{ old('linea_id', $grupo->linea_id) == $linea->id ? 'selected' : '' }}>
-                                    {{ $linea->nombre_linea }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+        <label for="lineas">Líneas de Investigación</label>
+        @foreach($lineas as $linea)
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="lineas[]" value="{{ $linea->id }}"
+                       @if(in_array($linea->id, $grupo->lineas->pluck('id')->toArray())) checked @endif>
+                <label class="form-check-label">
+                    {{ $linea->nombre_linea }}
+                </label>
+            </div>
+        @endforeach
+    </div>
 
+                    
                     <div class="form-group">
                         <button type="submit" class="btn btn-success">Guardar Cambios</button>
                         <a href="{{ route('grupos.index') }}" class="btn btn-secondary">Cancelar</a>

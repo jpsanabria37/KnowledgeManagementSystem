@@ -31,7 +31,6 @@
                     <tr>
                         <th>ID</th>
                         <th>Nombre de la Línea</th>
-                        <th>Centro Asociado</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
@@ -40,7 +39,6 @@
                         <tr>
                             <td>{{ $linea->id }}</td>
                             <td>{{ $linea->nombre_linea }}</td>
-                            <td>{{ $linea->centro ? $linea->centro->nombre_centro : 'No asignado' }}</td> <!-- Mostrar el centro asociado o "No asignado" -->
                             <td>
                                 <a href="{{ route('lineas.edit', $linea->id) }}" class="btn btn-warning">
                                     <i class="fas fa-edit"></i> Editar

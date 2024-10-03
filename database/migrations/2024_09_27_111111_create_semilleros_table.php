@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre_semillero');
             $table->string('lider_semillero')->nullable();
-            $table->foreignId('id_linea')->constrained('lineas_investigacion')->onDelete('cascade');
+            $table->foreignId('grupo_linea_id')->constrained('grupo_linea')->onDelete('cascade');
             $table->timestamps();
         });
     }

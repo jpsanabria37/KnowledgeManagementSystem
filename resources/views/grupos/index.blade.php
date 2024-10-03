@@ -31,9 +31,8 @@
                     <tr>
                         <th>ID</th>
                         <th>Nombre del Grupo</th>
-                        <th>Líder de Investigación</th>
+                        <th>Líder del Grupo</th>
                         <th>Centro</th>
-                        <th>Línea de Investigación</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
@@ -44,8 +43,10 @@
                             <td>{{ $grupo->nombre_grupo }}</td>
                             <td>{{ $grupo->lider_investigacion }}</td>
                             <td>{{ $grupo->centro->nombre_centro }}</td>
-                            <td>{{ $grupo->linea->nombre_linea }}</td>
                             <td>
+                            <a href="{{ route('grupos.show', $grupo->id) }}" class="btn btn-warning">
+                                    <i class="fas fa-view"></i> Ver
+                                </a>
                                 <a href="{{ route('grupos.edit', $grupo->id) }}" class="btn btn-warning">
                                     <i class="fas fa-edit"></i> Editar
                                 </a>

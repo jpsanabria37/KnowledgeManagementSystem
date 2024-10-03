@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('lineas_investigacion', function (Blueprint $table) {
             $table->id();
             $table->string('nombre_linea');
-            $table->foreignId('id_centro')->constrained('centros')->onDelete('cascade');
             $table->timestamps();
         });
     }

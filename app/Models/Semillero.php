@@ -9,23 +9,24 @@ class Semillero extends Model
 {
     use HasFactory;
     protected $table = 'semilleros';
-    protected $fillable = ['nombre_semillero', 'lider_semillero', 'linea_id'];
+    protected $fillable = ['nombre_semillero', 'lider_semillero', 'grupo_linea_id'];
 
-    // Relación con la línea de investigación
-    public function linea()
+
+    // Relación con grupos a través de la tabla intermedia
+    public function grupos()
     {
-        return $this->belongsTo(LineaInvestigacion::class);
+        return $this->hasManyThrough(Grupo::class, 'grupo_linea', 'semillero_id', 'id', 'id', 'grupo_id');
     }
 
-    // Relación con los proyectos
-    public function proyectos()
+
+    public function grupoLinea()
     {
-        return $this->hasMany(Proyecto::class);
+        return $this->belongsTo(GrupoLinea::class, 'grupo_linea_id'); // Usando grupo_linea_id como la FK
     }
 
-    // Relación con los miembros (Instructores y Aprendices)
-    public function miembros()
+
+    public function anteproyectos()
     {
-        return $this->hasMany(Miembro::class);
+        return $this->hasMany(Anteproyecto::class);
     }
 }

@@ -10,22 +10,20 @@ class LineaInvestigacionController extends Controller
 {
     public function index(Request $request)
     {
-        $lineas = LineaInvestigacion::with('centro')->paginate(10);
+        $lineas = LineaInvestigacion::paginate(10);
         return view('lineas.index', compact('lineas'));
     }
 
 
     public function create()
     {
-        $centros = Centro::all();
-        return view('lineas.create', compact('centros'));
+        return view('lineas.create');
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'nombre_linea' => 'required|string|max:255',
-            'id_centro' => 'required|exists:centros,id', // Cambia 'centro_id' a 'id_centro'
         ]);
 
         LineaInvestigacion::create($validatedData);
@@ -42,8 +40,7 @@ class LineaInvestigacionController extends Controller
 
     public function edit(LineaInvestigacion $linea)
     {
-        $centros = Centro::all(); // Obtener todos los centros para mostrarlos en el dropdown
-        return view('lineas.edit', compact('linea', 'centros')); // Pasar la línea y los centros a la vista
+        return view('lineas.edit', compact('linea')); // Pasar la línea y los centros a la vista
     }
 
 
@@ -51,7 +48,6 @@ class LineaInvestigacionController extends Controller
     {
         $validatedData = $request->validate([
             'nombre_linea' => 'required|string|max:255',
-            'id_centro' => 'required|exists:centros,id',
         ]);
 
         $linea->update($validatedData);

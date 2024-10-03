@@ -5,6 +5,7 @@ use App\Http\Controllers\GrupoInvestigacionController;
 use App\Http\Controllers\LineaInvestigacionController;
 use App\Http\Controllers\RegionalController;
 use App\Http\Controllers\SemilleroController;
+use App\Http\Controllers\AnteproyectoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,7 +48,35 @@ Route::delete('regionales/{regional}', [RegionalController::class, 'destroy'])->
 Route::resource('centros', CentroController::class);
 Route::resource('grupos', GrupoInvestigacionController::class);
 Route::resource('lineas', LineaInvestigacionController::class);
-Route::resource('semilleros', SemilleroController::class);
+// Crear nuevo semillero (formulario)
+Route::get('semilleros/create', [SemilleroController::class, 'create'])->name('semilleros.create');
+
+// Guardar semillero (almacenamiento)
+Route::post('semilleros', [SemilleroController::class, 'store'])->name('semilleros.store');
+
+// Mostrar lista de semilleros
+Route::get('semilleros', [SemilleroController::class, 'index'])->name('semilleros.index');
+
+// Mostrar un semillero en detalle
+Route::get('semilleros/{semillero}', [SemilleroController::class, 'show'])->name('semilleros.show');
+
+// Editar un semillero (formulario)
+Route::get('semilleros/{semillero}/edit', [SemilleroController::class, 'edit'])->name('semilleros.edit');
+
+// Actualizar un semillero
+Route::put('semilleros/{semillero}', [SemilleroController::class, 'update'])->name('semilleros.update');
+
+// Eliminar un semillero
+Route::delete('semilleros/{semillero}', [SemilleroController::class, 'destroy'])->name('semilleros.destroy');
+
+Route::resource('anteproyectos', AnteproyectoController::class);
+
+// Ruta para generar el PDF dinámicamente
+Route::get('anteproyectos/{anteproyecto}/generate_pdf', [AnteproyectoController::class, 'generarPdf'])->name('anteproyectos.generate_pdf');
+
+// Ruta para eliminar el PDF almacenado
+Route::delete('anteproyectos/{anteproyecto}/delete_pdf', [AnteproyectoController::class, 'deletePdf'])->name('anteproyectos.delete_pdf');
+
 
 Route::middleware([
     'auth:sanctum',
