@@ -24,9 +24,9 @@ class AnteproyectoController extends Controller
     }
 
 
-    
     public function store(Request $request)
     {
+        // Validar los datos recibidos
         $validated = $request->validate([
             'titulo' => 'required|string|max:255',
             'descripcion' => 'required|string',
@@ -44,7 +44,9 @@ class AnteproyectoController extends Controller
             'fecha_inicio' => 'nullable|date',
             'fecha_fin' => 'nullable|date',
             'realizado_por' => 'required|string|max:255',
-            'pdf_option' => 'required|in:generate,upload', 
+            'pdf_option' => 'required|in:generate,upload',
+            'colaboradores' => 'nullable|array', // Validación para colaboradores adicionales
+            'colaboradores.*' => 'string|max:255', // Cada colaborador debe ser una cadena de texto
         ]);
     
         // Manejo del archivo Poster
@@ -57,18 +59,29 @@ class AnteproyectoController extends Controller
             // Subir PDF
             $validated['archivo_pdf'] = $request->file('archivo_pdf')->store('anteproyectos', 'public');
         } elseif ($request->pdf_option === 'generate') {
-            // Generar PDF automáticamente y pasar todas las variables necesarias
-            //$pdf = Pdf::loadView('anteproyectos.pdf', $validated); 
-            //$pdfPath = 'anteproyectos/pdf_' . time() . '.pdf';
-            //Storage::put('public/' . $pdfPath, $pdf->output()); // Almacenar el archivo en storage/app/public
-            //$validated['archivo_pdf'] = $pdfPath;
+            // Generar PDF automáticamente
+            // Descomenta las líneas de código a continuación si tienes implementada la generación de PDF
+            /*
+            $pdf = Pdf::loadView('anteproyectos.pdf', $validated); 
+            $pdfPath = 'anteproyectos/pdf_' . time() . '.pdf';
+            Storage::put('public/' . $pdfPath, $pdf->output()); // Almacenar el archivo en storage/app/public
+            $validated['archivo_pdf'] = $pdfPath;
+            */
         }
+    
+        // Asignar el usuario autenticado como el creador del anteproyecto
+        $validated['user_id'] = auth()->id();
+    
+        // Manejar los colaboradores (si existen, los almacenamos como JSON)
+        $validated['colaboradores'] = $request->colaboradores ? json_encode($request->colaboradores) : null;
     
         // Crear el anteproyecto con los datos validados
         Anteproyecto::create($validated);
     
         return redirect()->route('anteproyectos.index')->with('success', 'Anteproyecto creado exitosamente.');
     }
+
+    
     public function edit(Anteproyecto $anteproyecto)
     {
         $semilleros = Semillero::all();

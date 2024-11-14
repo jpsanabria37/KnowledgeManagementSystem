@@ -1,89 +1,82 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CentroController;
 use App\Http\Controllers\GrupoInvestigacionController;
 use App\Http\Controllers\LineaInvestigacionController;
 use App\Http\Controllers\RegionalController;
 use App\Http\Controllers\SemilleroController;
 use App\Http\Controllers\AnteproyectoController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
+use Laravel\Fortify\Fortify;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
+// Ruta de bienvenida (abierta para todos)
 Route::get('/', function () {
     return view('welcome');
+})->name('home');
+
+// Rutas para el Administrador (Acceso completo)
+Route::middleware(['auth', 'role:admin'])->group(function () {
+
+    // Gestionar Regionales
+    Route::resource('regionales', RegionalController::class);
+
+    // Gestionar Centros
+    Route::resource('centros', CentroController::class);
+
+    // Gestionar Grupos de Investigación
+    Route::resource('grupos', GrupoInvestigacionController::class);
+
+    // Gestionar Líneas de Investigación
+    Route::resource('lineas', LineaInvestigacionController::class);
+
+    // Gestionar Semilleros (incluye creación, edición y eliminación)
+    Route::resource('semilleros', SemilleroController::class);
+
+    // Gestionar Anteproyectos (incluye creación, edición y eliminación)
+    Route::resource('anteproyectos', AnteproyectoController::class);
+
+    // Rutas para la gestión de PDFs en Anteproyectos
+    Route::get('anteproyectos/{anteproyecto}/generate_pdf', [AnteproyectoController::class, 'generarPdf'])->name('anteproyectos.generate_pdf');
+    Route::delete('anteproyectos/{anteproyecto}/delete_pdf', [AnteproyectoController::class, 'deletePdf'])->name('anteproyectos.delete_pdf');
+
+    // Dashboard del administrador
+    Route::get('/admin', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
 });
 
-// routes/web.php
-// Mostrar todas las regionales (index)
-Route::get('regionales', [RegionalController::class, 'index'])->name('regionales.index');
 
-// Mostrar formulario para crear una nueva regional (create)
-Route::get('regionales/create', [RegionalController::class, 'create'])->name('regionales.create');
-
-// Guardar una nueva regional (store)
-Route::post('regionales', [RegionalController::class, 'store'])->name('regionales.store');
-
-// Mostrar una regional específica (show)
-Route::get('regionales/{regional}', [RegionalController::class, 'show'])->name('regionales.show');
-
-// Mostrar formulario para editar una regional (edit)
-Route::get('regionales/{regional}/edit', [RegionalController::class, 'edit'])->name('regionales.edit');
-
-// Actualizar una regional existente (update)
-Route::put('regionales/{regional}', [RegionalController::class, 'update'])->name('regionales.update');
-
-// Eliminar una regional (destroy)
-Route::delete('regionales/{regional}', [RegionalController::class, 'destroy'])->name('regionales.destroy');
-
-Route::resource('centros', CentroController::class);
-Route::resource('grupos', GrupoInvestigacionController::class);
-Route::resource('lineas', LineaInvestigacionController::class);
-// Crear nuevo semillero (formulario)
-Route::get('semilleros/create', [SemilleroController::class, 'create'])->name('semilleros.create');
-
-// Guardar semillero (almacenamiento)
-Route::post('semilleros', [SemilleroController::class, 'store'])->name('semilleros.store');
-
-// Mostrar lista de semilleros
-Route::get('semilleros', [SemilleroController::class, 'index'])->name('semilleros.index');
-
-// Mostrar un semillero en detalle
-Route::get('semilleros/{semillero}', [SemilleroController::class, 'show'])->name('semilleros.show');
-
-// Editar un semillero (formulario)
-Route::get('semilleros/{semillero}/edit', [SemilleroController::class, 'edit'])->name('semilleros.edit');
-
-// Actualizar un semillero
-Route::put('semilleros/{semillero}', [SemilleroController::class, 'update'])->name('semilleros.update');
-
-// Eliminar un semillero
-Route::delete('semilleros/{semillero}', [SemilleroController::class, 'destroy'])->name('semilleros.destroy');
-
-Route::resource('anteproyectos', AnteproyectoController::class);
-
-// Ruta para generar el PDF dinámicamente
-Route::get('anteproyectos/{anteproyecto}/generate_pdf', [AnteproyectoController::class, 'generarPdf'])->name('anteproyectos.generate_pdf');
-
-// Ruta para eliminar el PDF almacenado
-Route::delete('anteproyectos/{anteproyecto}/delete_pdf', [AnteproyectoController::class, 'deletePdf'])->name('anteproyectos.delete_pdf');
-
-
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
+// Rutas para el rol de aprendiz
+Route::middleware(['auth', 'role:aprendiz'])->prefix('aprendiz')->name('aprendiz.')->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('aprendiz.dashboard');
     })->name('dashboard');
+// Ruta para ver los semilleros
+    Route::get('/semilleros', [App\Http\Controllers\Aprendiz\SemilleroController::class, 'index'])->name('semilleros.index');
+    Route::get('/semilleros/{id}', [App\Http\Controllers\Aprendiz\SemilleroController::class, 'show'])->name('semilleros.show');
+
+      // Ruta para ver todos los anteproyectos del aprendiz
+      Route::get('/anteproyectos', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'index'])->name('anteproyectos.index');
+
+      // Ruta para crear un nuevo anteproyecto
+      Route::get('/create-step1', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'createStep1'])->name('anteproyectos.createStep1');
+    Route::post('/store-step1', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'storeStep1'])->name('anteproyectos.storeStep1');
+
+    Route::get('/anteproyectos/{anteproyecto}/create-step2', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'createStep2'])->name('anteproyectos.createStep2');
+    Route::post('/anteproyectos/{anteproyecto}/store-step2', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'storeStep2'])->name('anteproyectos.storeStep2');
+
+    Route::get('/{anteproyecto}/create-step3', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'createStep3'])->name('anteproyectos.createStep3');
+    Route::post('/{anteproyecto}/store-step3', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'storeStep3'])->name('anteproyectos.storeStep3');
+      Route::get('/anteproyectos/{id}', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'showOwn'])
+      ->name('anteproyectos.show');
+
+      Route::get('anteproyectos/public/{id}', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'showPublic'])
+      ->name('anteproyectos.showPublic');
+
 });
+
+
+
+?>

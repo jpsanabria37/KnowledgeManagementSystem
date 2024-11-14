@@ -1,32 +1,33 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <x-authentication-card-logo />
+            <!-- Logo del SENA -->
+            <img src="{{ asset('img/logo_sena.png') }}" alt="Logo SENA" class="w-24 h-24 mx-auto mb-4">
         </x-slot>
 
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-        </div>
+        <!-- Encabezado del formulario de recuperación de contraseña -->
+        <h1 class="text-2xl font-bold text-center text-green-700 mb-2">Recuperar Contraseña</h1>
+        <p class="text-center text-gray-600 mb-6">
+            Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+        </p>
 
-        @if (session('status'))
-            <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-                {{ session('status') }}
-            </div>
-        @endif
-
+        <!-- Validación de errores -->
         <x-validation-errors class="mb-4" />
 
+        <!-- Formulario de recuperación de contraseña -->
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
 
-            <div class="block">
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <!-- Campo de Correo Electrónico -->
+            <div>
+                <x-label for="email" value="Correo Electrónico" class="text-gray-700" />
+                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Email Password Reset Link') }}
+            <!-- Botón para enviar el enlace de restablecimiento -->
+            <div class="flex items-center justify-center mt-6">
+                <x-button class="bg-green-700 hover:bg-green-800 text-white font-semibold rounded-lg px-4 py-2 transition duration-200">
+                    Enviar Enlace de Recuperación
                 </x-button>
             </div>
         </form>
