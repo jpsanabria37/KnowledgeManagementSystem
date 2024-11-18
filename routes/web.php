@@ -72,8 +72,13 @@ Route::middleware(['auth', 'role:aprendiz'])->prefix('aprendiz')->name('aprendiz
       Route::get('/anteproyectos/{id}', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'showOwn'])
       ->name('anteproyectos.show');
 
+    Route::get('/{anteproyecto}/create-step4', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'createStep4'])->name('anteproyectos.createStep4');
+    Route::post('/{anteproyecto}/store-step4', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'storeStep4'])->name('anteproyectos.storeStep4');
       Route::get('anteproyectos/public/{id}', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'showPublic'])
       ->name('anteproyectos.showPublic');
+
+      Route::post('/anteproyectos/{id}/enviar', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'enviarAnteproyecto'])->name('anteproyectos.enviar');
+
 
 });
 

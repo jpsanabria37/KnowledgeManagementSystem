@@ -1,7 +1,7 @@
 @extends('layouts.aprendiz')
 
 @section('content')
-    <h2 class="text-2xl font-semibold mb-4">Revisión y Configuración Final del Anteproyecto</h2>
+    <h2 class="text-2xl font-semibold mb-4">Añadir Actividades a los Objetivos Específicos</h2>
 
     <!-- Información General -->
     <div class="bg-white p-4 rounded-lg shadow-md mb-4">
@@ -23,91 +23,80 @@
         </div>
     @endif
 
-    <!-- Formulario para los Objetivos Específicos y Actividades -->
-    <form action="{{ route('aprendiz.anteproyectos.storeStep3', $anteproyecto->id) }}" method="POST" onsubmit="return validateForm()">
-        @csrf
+    <!-- Formulario por Objetivo Específico -->
+    @php $todosCompletos = true; @endphp
+    @foreach ($anteproyecto->objetivosEspecificos as $index => $objetivo)
+        <div class="bg-gray-100 p-4 rounded-lg shadow-md mb-4">
+            <h4 class="text-lg font-semibold mb-2">Objetivo {{ $index + 1 }}</h4>
+            <p><strong>Nombre:</strong> {{ $objetivo->nombre }}</p>
+            <p><strong>Recursos Necesarios:</strong> {{ $objetivo->recursos_necesarios }}</p>
 
-        <h3 class="text-xl font-semibold mb-4">Objetivos Específicos y Actividades</h3>
+            @if ($objetivo->actividades->isEmpty())
+                @php $todosCompletos = false; @endphp
+                <p class="text-red-500 font-semibold">Este objetivo aún no tiene actividades registradas.</p>
+            @else
+                <h5 class="font-semibold text-gray-700 mt-2">Actividades Registradas</h5>
+                <ul class="list-disc pl-6">
+                    @foreach ($objetivo->actividades as $actividad)
+                        <li>
+                            <strong>{{ $actividad->nombre }}</strong> 
+                            ({{ $actividad->fecha_inicio }} - {{ $actividad->fecha_fin }}) - Responsable: {{ $actividad->responsable }}
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
 
-        @foreach($anteproyecto->objetivosEspecificos as $index => $objetivo)
-            <!-- Sección Colapsable de Objetivo Específico -->
-            <div class="bg-gray-100 p-4 rounded-lg shadow-md mb-4">
-                <button type="button" onclick="toggleObjective({{ $index }})" class="w-full text-left font-semibold text-lg">
-                    Objetivo {{ $index + 1 }}
-                </button>
+            <!-- Formulario para añadir nuevas actividades -->
+            <form action="{{ route('aprendiz.anteproyectos.storeStep3', $objetivo->id) }}" method="POST" class="mt-4">
+                @csrf
 
-                <div id="objective-{{ $index }}" class="mt-4 hidden">
-                    <input type="hidden" name="objetivos_especificos[{{ $index }}][id]" value="{{ $objetivo->id }}">
-                    
-                    <div class="grid grid-cols-2 gap-4">
+                <h5 class="font-semibold text-gray-700 mb-2">Añadir Actividades</h5>
+                <div id="actividad-list-{{ $objetivo->id }}" class="grid grid-cols-1 gap-2">
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-gray-700 font-bold mb-1">Nombre:</label>
-                            <input type="text" name="objetivos_especificos[{{ $objetivo->id }}][nombre]"
-                                   value="{{ old("objetivos_especificos.{$objetivo->id}.nombre", $objetivo->nombre) }}"
-                                   class="w-full border-gray-300 rounded-lg mb-2" required>
+                            <label>Nombre:</label>
+                            <input type="text" name="actividades[0][nombre]" class="w-full border-gray-300 rounded-lg" required>
                         </div>
                         <div>
-                            <label class="block text-gray-700 font-bold mb-1">Recursos Necesarios:</label>
-                            <textarea name="objetivos_especificos[{{ $objetivo->id }}][recursos_necesarios]"
-                                      class="w-full border-gray-300 rounded-lg mb-2">{{ old("objetivos_especificos.{$objetivo->id}.recursos_necesarios", $objetivo->recursos_necesarios) }}</textarea>
+                            <label>Responsable:</label>
+                            <input type="text" name="actividades[0][responsable]" class="w-full border-gray-300 rounded-lg" required>
                         </div>
-                    </div>
-
-                    <!-- Actividades -->
-                    <div class="mb-4">
-                        <h5 class="font-semibold text-gray-700 mt-2">Actividades</h5>
-                        <div class="actividad-list grid grid-cols-1 gap-2" id="actividad-list-{{ $objetivo->id }}">
-                            @foreach ($objetivo->actividades as $actividad)
-                                <div class="bg-white p-3 rounded-lg border border-gray-200 grid grid-cols-2 gap-2">
-                                    <input type="hidden" name="objetivos_especificos[{{ $objetivo->id }}][actividades][{{ $actividad->id }}][id]" value="{{ $actividad->id }}">
-                                    
-                                    <div>
-                                        <label>Nombre:</label>
-                                        <input type="text" name="objetivos_especificos[{{ $objetivo->id }}][actividades][{{ $actividad->id }}][nombre]"
-                                               value="{{ old("objetivos_especificos.{$objetivo->id}.actividades.{$actividad->id}.nombre", $actividad->nombre) }}"
-                                               class="w-full border-gray-300 rounded-lg" required>
-                                    </div>
-                                    <div>
-                                        <label>Responsable:</label>
-                                        <input type="text" name="objetivos_especificos[{{ $objetivo->id }}][actividades][{{ $actividad->id }}][responsable]"
-                                               value="{{ old("objetivos_especificos.{$objetivo->id}.actividades.{$actividad->id}.responsable", $actividad->responsable) }}"
-                                               class="w-full border-gray-300 rounded-lg" required>
-                                    </div>
-                                    <div>
-                                        <label>Fecha Inicio:</label>
-                                        <input type="date" name="objetivos_especificos[{{ $objetivo->id }}][actividades][{{ $actividad->id }}][fecha_inicio]"
-                                               value="{{ old("objetivos_especificos.{$objetivo->id}.actividades.{$actividad->id}.fecha_inicio", $actividad->fecha_inicio) }}"
-                                               class="w-full border-gray-300 rounded-lg" required>
-                                    </div>
-                                    <div>
-                                        <label>Fecha Fin:</label>
-                                        <input type="date" name="objetivos_especificos[{{ $objetivo->id }}][actividades][{{ $actividad->id }}][fecha_fin]"
-                                               value="{{ old("objetivos_especificos.{$objetivo->id}.actividades.{$actividad->id}.fecha_fin", $actividad->fecha_fin) }}"
-                                               class="w-full border-gray-300 rounded-lg" required>
-                                    </div>
-                                </div>
-                            @endforeach
+                        <div>
+                            <label>Fecha Inicio:</label>
+                            <input type="date" name="actividades[0][fecha_inicio]" class="w-full border-gray-300 rounded-lg" required>
                         </div>
-
-                        <!-- Botón para añadir una nueva actividad -->
-                        <button type="button" onclick="addActivity({{ $objetivo->id }})" class="text-blue-500 hover:text-blue-700 mt-2">
-                            + Añadir Actividad
-                        </button>
+                        <div>
+                            <label>Fecha Fin:</label>
+                            <input type="date" name="actividades[0][fecha_fin]" class="w-full border-gray-300 rounded-lg" required>
+                        </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
 
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded mt-4 w-full">Guardar y Continuar</button>
-    </form>
+                <!-- Botón para añadir más actividades -->
+                <button type="button" onclick="addActivity({{ $objetivo->id }})" class="text-blue-500 hover:text-blue-700 mt-2">
+                    + Añadir Actividad
+                </button>
+
+                <!-- Botón para enviar -->
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full">Guardar Actividades</button>
+            </form>
+        </div>
+    @endforeach
+
+    <!-- Botón para avanzar al siguiente paso -->
+    @if ($todosCompletos)
+        <div class="mt-6">
+            <a href="{{ route('aprendiz.anteproyectos.createStep4', $anteproyecto->id) }}"
+               class="bg-blue-500 text-white px-4 py-2 rounded w-full inline-block text-center">
+                Avanzar al Siguiente Paso
+            </a>
+        </div>
+    @else
+        <p class="text-center text-gray-700 mt-4">Completa todas las actividades para avanzar al siguiente paso.</p>
+    @endif
 
     <script>
-        // Alternar sección de cada objetivo
-        function toggleObjective(index) {
-            const objective = document.getElementById('objective-' + index);
-            objective.classList.toggle('hidden');
-        }
-
+        // Función para añadir nuevas actividades dinámicamente
         function addActivity(objetivoId) {
             const container = document.getElementById('actividad-list-' + objetivoId);
             const uniqueId = Date.now();
@@ -115,43 +104,24 @@
             newActivity.classList.add('bg-white', 'p-3', 'rounded-lg', 'border', 'border-gray-200', 'grid', 'grid-cols-2', 'gap-2');
 
             newActivity.innerHTML = `
-                <input type="hidden" name="objetivos_especificos[${objetivoId}][actividades][new_${uniqueId}][id]" value="new_${uniqueId}">
                 <div>
                     <label>Nombre:</label>
-                    <input type="text" name="objetivos_especificos[${objetivoId}][actividades][new_${uniqueId}][nombre]" class="w-full border-gray-300 rounded-lg" required>
+                    <input type="text" name="actividades[${uniqueId}][nombre]" class="w-full border-gray-300 rounded-lg" required>
                 </div>
                 <div>
                     <label>Responsable:</label>
-                    <input type="text" name="objetivos_especificos[${objetivoId}][actividades][new_${uniqueId}][responsable]" class="w-full border-gray-300 rounded-lg" required>
+                    <input type="text" name="actividades[${uniqueId}][responsable]" class="w-full border-gray-300 rounded-lg" required>
                 </div>
                 <div>
                     <label>Fecha Inicio:</label>
-                    <input type="date" name="objetivos_especificos[${objetivoId}][actividades][new_${uniqueId}][fecha_inicio]" class="w-full border-gray-300 rounded-lg" required>
+                    <input type="date" name="actividades[${uniqueId}][fecha_inicio]" class="w-full border-gray-300 rounded-lg" required>
                 </div>
                 <div>
                     <label>Fecha Fin:</label>
-                    <input type="date" name="objetivos_especificos[${objetivoId}][actividades][new_${uniqueId}][fecha_fin]" class="w-full border-gray-300 rounded-lg" required>
+                    <input type="date" name="actividades[${uniqueId}][fecha_fin]" class="w-full border-gray-300 rounded-lg" required>
                 </div>
             `;
             container.appendChild(newActivity);
-        }
-
-        function validateForm() {
-            const errorContainer = document.getElementById('error-container');
-            let valid = true;
-
-            const objetivos = document.querySelectorAll('.actividad-list');
-            objetivos.forEach(container => {
-                if (container.children.length === 0) valid = false;
-            });
-
-            if (!valid) {
-                errorContainer.classList.remove('hidden');
-                errorContainer.scrollIntoView({ behavior: 'smooth' });
-            } else {
-                errorContainer.classList.add('hidden');
-            }
-            return valid;
         }
     </script>
 @endsection

@@ -9,9 +9,17 @@ class Actividad extends Model
 {
     use HasFactory;
     protected $table = 'actividades';
+
+    protected $fillable = [
+        'nombre',
+        'responsable',
+        'fecha_inicio',
+        'fecha_fin',
+        'objetivo_especifico_id',
+    ];
     public function objetivoEspecifico()
-{
-    return $this->belongsTo(ObjetivoEspecifico::class);
-}
+    {
+        return $this->belongsTo(ObjetivoEspecifico::class);
+    }
 
 }

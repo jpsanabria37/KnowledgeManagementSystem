@@ -35,6 +35,7 @@ class AnteproyectoController extends Controller
             'objetivo_general' => $validated['objetivo_general'],
             'colaboradores' => $validated['colaboradores'] ?? [],
             'user_id' => Auth::id(),
+            'paso_actual' => 2,
             'semillero_id' => $validated['semillero_id'], // Asigna el semillero_id validado
         ]);
     
@@ -79,42 +80,68 @@ class AnteproyectoController extends Controller
 // Paso 3: Añadir Actividades a cada Objetivo Específico
 public function storeStep3(Request $request, $id)
 {
-    $anteproyecto = Anteproyecto::findOrFail($id);
-
-    // Validación de los datos
+    // Validar los datos del formulario
     $validatedData = $request->validate([
-        'objetivos_especificos.*.nombre' => 'required|string|max:255',
-        'objetivos_especificos.*.recursos_necesarios' => 'nullable|string',
-        'objetivos_especificos.*.actividades' => 'array|min:1',
-        'objetivos_especificos.*.actividades.*.nombre' => 'required|string|max:255',
-        'objetivos_especificos.*.actividades.*.fecha_inicio' => 'required|date',
-        'objetivos_especificos.*.actividades.*.fecha_fin' => 'required|date|after_or_equal:objetivos_especificos.*.actividades.*.fecha_inicio',
-        'objetivos_especificos.*.actividades.*.responsable' => 'required|string|max:255',
+        'actividades.*.id' => 'nullable|exists:actividades,id',
+        'actividades.*.nombre' => 'required|string|max:255',
+        'actividades.*.responsable' => 'required|string|max:255',
+        'actividades.*.fecha_inicio' => 'required|date',
+        'actividades.*.fecha_fin' => 'required|date|after_or_equal:actividades.*.fecha_inicio',
     ]);
 
-    // Mostrar datos validados para depurar
-    dd($validatedData);
+    // Buscar el objetivo específico
+    $objetivo = ObjetivoEspecifico::findOrFail($id);
 
-    // Luego de revisar los datos, podemos continuar con la lógica
+    foreach ($validatedData['actividades'] as $actividadData) {
+        // Verificar si la actividad ya existe
+        if (!empty($actividadData['id'])) {
+            // Actualizar actividad existente
+            $actividad = Actividad::findOrFail($actividadData['id']);
+            $actividad->update($actividadData);
+        } else {
+            // Crear una nueva actividad
+            $objetivo->actividades()->create($actividadData);
+        }
+    }
+
+    return redirect()
+        ->route('aprendiz.anteproyectos.createStep3', $objetivo->anteproyecto_id)
+        ->with('success', 'Actividades guardadas correctamente.');
 }
 
 
-
-
-    public function storeStep4(Request $request, $id)
+public function createStep4($id)
 {
-    $anteproyecto = Anteproyecto::findOrFail($id);
+    // Buscar el anteproyecto
+    $anteproyecto = Anteproyecto::with('objetivosEspecificos.actividades')->findOrFail($id);
 
-    // Validación y almacenamiento de datos del paso 4
-    // ...
-
-    // Marcar el anteproyecto como completo
-    $anteproyecto->estado = 'completo';
-    $anteproyecto->paso_actual = 4;
-    $anteproyecto->save();
-
-    return redirect()->route('aprendiz.anteproyectos.index')->with('success', 'Anteproyecto completado exitosamente.');
+    // Renderizar la vista del paso 4
+    return view('aprendiz.anteproyectos.create_step4', compact('anteproyecto'));
 }
+
+
+
+
+public function storeStep4(Request $request, $id)
+{
+    $validatedData = $request->validate([
+        'justificacion' => 'required|string',
+        'alcance' => 'required|string',
+        'metodologia' => 'required|string',
+    ]);
+
+    $anteproyecto = Anteproyecto::findOrFail($id);
+    $anteproyecto->update([
+        'justificacion' => $validatedData['justificacion'],
+        'alcance' => $validatedData['alcance'],
+        'metodologia' => $validatedData['metodologia'],
+        'paso_actual' => 4, // Actualizamos el paso actual
+    ]);
+
+    return redirect()->route('aprendiz.anteproyectos.index')
+        ->with('success', 'El anteproyecto ha sido completado con éxito.');
+}
+
     
     /**
      * Mostrar una lista de todos los anteproyectos del aprendiz.
@@ -203,4 +230,19 @@ public function storeStep3(Request $request, $id)
 
         return view('aprendiz.anteproyectos.show_public', compact('anteproyecto'));
     }
+
+    public function enviarAnteproyecto($id)
+{
+    // Buscar el anteproyecto
+    $anteproyecto = Anteproyecto::findOrFail($id);
+
+    // Cambiar el estado de creación a "completo"
+    $anteproyecto->update([
+        'estado_creacion' => 'completo',
+        'paso_actual' => 4, // Asegurar que el paso actual esté en 4
+    ]);
+
+    return redirect()->route('aprendiz.anteproyectos.index')->with('success', 'Anteproyecto enviado correctamente.');
+}
+
 }
