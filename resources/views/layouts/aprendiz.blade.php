@@ -16,46 +16,51 @@
 <body class="bg-gray-100 font-sans antialiased">
     <div class="flex min-h-screen">
         <!-- Sidebar de navegación -->
-        <aside class="w-1/4 bg-green-800 text-white p-6 shadow-lg">
-            <div class="mb-8">
-                <h2 class="text-2xl font-bold">Panel del Aprendiz</h2>
-                <p class="text-green-300 text-sm">Área de trabajo</p>
-            </div>
-            <nav>
-                <ul class="space-y-4">
-                    <li>
-                        <a href="{{ route('aprendiz.dashboard') }}" class="flex items-center p-2 text-white hover:bg-green-700 rounded-md">
-                            <i class="fas fa-home mr-2"></i> Inicio
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('aprendiz.semilleros.index') }}" class="flex items-center p-2 text-white hover:bg-green-700 rounded-md">
-                            <i class="fas fa-seedling mr-2"></i> Ver Semilleros
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('aprendiz.anteproyectos.createStep1') }}" class="flex items-center p-2 text-white hover:bg-green-700 rounded-md">
-                            <i class="fas fa-plus mr-2"></i> Crear Anteproyecto
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('aprendiz.anteproyectos.index') }}" class="flex items-center p-2 text-white hover:bg-green-700 rounded-md">
-                            <i class="fas fa-folder mr-2"></i> Mis Anteproyectos
-                        </a>
-                    </li>
+        <aside class="w-1/4 bg-green-800 text-white p-6 shadow-lg flex flex-col justify-between">
+                <div>
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold">Panel del Aprendiz</h2>
+                        <p class="text-green-300 text-sm">Área de trabajo</p>
+                    </div>
+                    <nav>
+                        <ul class="space-y-4">
+                            <li>
+                                <a href="{{ route('aprendiz.dashboard') }}" class="flex items-center p-2 text-white hover:bg-green-700 rounded-md">
+                                    <i class="fas fa-home mr-2"></i> Inicio
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('aprendiz.semilleros.index') }}" class="flex items-center p-2 text-white hover:bg-green-700 rounded-md">
+                                    <i class="fas fa-seedling mr-2"></i> Ver Semilleros
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('aprendiz.anteproyectos.createStep1') }}" class="flex items-center p-2 text-white hover:bg-green-700 rounded-md">
+                                    <i class="fas fa-plus mr-2"></i> Crear Anteproyecto
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('aprendiz.anteproyectos.index') }}" class="flex items-center p-2 text-white hover:bg-green-700 rounded-md">
+                                    <i class="fas fa-folder mr-2"></i> Mis Anteproyectos
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            <div>
+                <ul>
                     <li>
                         <a href="{{ route('logout') }}" class="flex items-center p-2 text-white hover:bg-green-700 rounded-md"
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
                         </a>
                     </li>
                 </ul>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                    @csrf
-                </form>
-            </nav>
+            </div>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                 @csrf
+            </form>
         </aside>
-
         <!-- Contenido Principal -->
         <main class="flex-1 p-8 bg-gray-50">
             <header class="mb-6">
