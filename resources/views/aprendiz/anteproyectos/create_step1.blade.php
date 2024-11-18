@@ -29,12 +29,16 @@
             </div>
             <!-- Colaboradores -->
             <div class="mb-4">
-                <label for="colaboradores" class="block text-sm font-medium text-gray-700">Colaboradores</label>
-                <div id="colaboradores">
+        <label for="colaboradores" class="block text-sm font-medium text-gray-700">Colaboradores</label>
+        <div id="colaboradores" class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
                     <input type="text" name="colaboradores[]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Nombre del colaborador" required>
+                    <button type="button" onclick="addColaborador()" class="p-2 bg-indigo-500 text-white rounded-full shadow hover:bg-indigo-600">
+                        <span class="text-lg font-bold">+</span>
+                    </button>
                 </div>
-                <button type="button" onclick="addColaborador()" class="text-indigo-500 hover:underline mt-2">Agregar colaborador</button>
-            </div>
+        </div>
+    </div>
 
             <!-- Título -->
             <div class="mb-4">
@@ -63,12 +67,40 @@
     <script>
         function addColaborador() {
             const container = document.getElementById('colaboradores');
+            
+            // Crear un contenedor para cada fila de input
+            const row = document.createElement('div');
+            row.className = 'flex items-center gap-2';
+
+            // Crear el input
             const input = document.createElement('input');
             input.type = 'text';
             input.name = 'colaboradores[]';
             input.className = 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm';
             input.placeholder = 'Nombre del colaborador';
-            container.appendChild(input);
+
+         
+
+            // Crear botón para eliminar
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.className = 'p-2 bg-red-500 text-white rounded-full shadow hover:bg-red-600';
+            deleteButton.innerHTML = '<span class="text-lg font-bold">-</span>';
+            deleteButton.onclick = function() {
+                removeColaborador(row);
+            };
+
+            // Agregar input y botón de eliminar a la fila
+            row.appendChild(input);
+            row.appendChild(deleteButton);
+
+            // Agregar la fila completa al contenedor principal
+            container.appendChild(row);
+        }
+
+        function removeColaborador(row) {
+            const container = document.getElementById('colaboradores');
+            container.removeChild(row);
         }
     </script>
 @endsection
