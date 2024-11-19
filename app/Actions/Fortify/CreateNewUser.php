@@ -19,10 +19,22 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+       
+        // Validar los datos de entrada
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:users',
+                // Validar dominios permitidos
+                'regex:/@(misena|soysena|sena)\.edu\.co$/',
+            ],
+            'password' => $this->passwordRules(), // Usar las reglas de contraseña definidas
+            'ficha' => ['required', 'string', 'max:20'], // Campo para la ficha
+            'programa' => ['required', 'string', 'max:255'], // Campo para el programa
         ])->validate();
 
         // Crear el usuario
@@ -30,9 +42,11 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            'ficha' => $input['ficha'], // Guardar el campo de ficha
+            'programa' => $input['programa'], // Guardar el campo de programa
         ]);
 
-        // Asignar el rol de 'aprendiz' al usuario recién creado
+        // Asignar el rol "aprendiz" al usuario recién creado
         $user->assignRole('aprendiz');
 
         return $user;

@@ -25,7 +25,16 @@
             <!-- Campo de Correo Electrónico -->
             <div class="mt-4">
                 <x-label for="email" value="Correo Electrónico" class="text-gray-700" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+                <x-input 
+                    id="email" 
+                    class="block mt-1 w-full" 
+                    type="email" 
+                    name="email" 
+                    :value="old('email')" 
+                    placeholder="ejemplo@misena.edu.co" 
+                    required 
+                    autocomplete="username" 
+                />
             </div>
 
             <!-- Campo de Contraseña -->
@@ -38,6 +47,34 @@
             <div class="mt-4">
                 <x-label for="password_confirmation" value="Confirmar Contraseña" class="text-gray-700" />
                 <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
+            </div>
+
+            <!-- Campo de Número de Ficha -->
+            <div class="mt-4">
+                <x-label for="ficha" value="Número de Ficha" class="text-gray-700" />
+                <x-input 
+                    id="ficha" 
+                    class="block mt-1 w-full" 
+                    type="text" 
+                    name="ficha" 
+                    :value="old('ficha')" 
+                    placeholder="Ej: 1234567" 
+                    required 
+                />
+            </div>
+
+            <!-- Campo de Programa de Formación -->
+            <div class="mt-4">
+                <x-label for="programa" value="Programa de Formación" class="text-gray-700" />
+                <x-input 
+                    id="programa" 
+                    class="block mt-1 w-full" 
+                    type="text" 
+                    name="programa" 
+                    :value="old('programa')" 
+                    placeholder="Ej: Desarrollo de Software" 
+                    required 
+                />
             </div>
 
             <!-- Términos y condiciones -->
