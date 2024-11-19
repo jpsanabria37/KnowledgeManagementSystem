@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Aprendiz | SENA</title>
-    
     <!-- Cargar estilos con Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -75,4 +74,10 @@
         </main>
     </div>
 </body>
+    <!-- Alpine.js con soporte de plugins -->
+    <!-- Alpine Plugins -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+ 
+    <!-- Alpine Core -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </html>
