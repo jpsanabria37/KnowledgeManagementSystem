@@ -36,19 +36,35 @@
         let objetivoIndex = 1;
 
         function addObjective() {
-            const container = document.getElementById('objetivosContainer');
-            const newObjetivo = document.createElement('div');
-            newObjetivo.classList.add('objetivo-item', 'mb-6', 'p-4', 'bg-blue-50', 'rounded-lg', 'border', 'border-blue-200');
-            newObjetivo.innerHTML = `
-                <label class="block text-gray-700 font-bold mb-2">Objetivo Específico:</label>
-                <input type="text" name="objetivos_especificos[${objetivoIndex}][nombre]" class="w-full border border-gray-300 rounded-lg p-2 mb-4" required>
+                    const container = document.getElementById('objetivosContainer');
+                    const newObjetivo = document.createElement('div');
+                    newObjetivo.classList.add('objetivo-item', 'mb-6', 'p-4', 'bg-blue-50', 'rounded-lg', 'border', 'border-blue-200');
+                    newObjetivo.innerHTML = `
+                        <label class="block text-gray-700 font-bold mb-2">Objetivo Específico:</label>
+                        <input type="text" name="objetivos_especificos[${objetivoIndex}][nombre]" class="w-full border border-gray-300 rounded-lg p-2 mb-4" required>
 
-                <label class="block text-gray-700 font-bold mb-2">Recursos Necesarios:</label>
-                <textarea name="objetivos_especificos[${objetivoIndex}][recursos_necesarios]" class="w-full border border-gray-300 rounded-lg p-2" placeholder="Especifica los recursos necesarios"></textarea>
-            `;
-            container.appendChild(newObjetivo);
-            objetivoIndex++;
+                        <label class="block text-gray-700 font-bold mb-2">Recursos Necesarios:</label>
+                        <textarea name="objetivos_especificos[${objetivoIndex}][recursos_necesarios]" class="w-full border border-gray-300 rounded-lg p-2 mb-4" placeholder="Especifica los recursos necesarios"></textarea>
+
+                        <button type="button" class="remove-objetivo-btn text-white bg-red-500 hover:bg-red-600 rounded-lg px-4 py-2">
+                            Eliminar
+                        </button>
+                    `;
+                    container.appendChild(newObjetivo);
+
+                    // Agregar el evento para eliminar este objetivo
+                    newObjetivo.querySelector('.remove-objetivo-btn').addEventListener('click', removeObjective);
+
+                    objetivoIndex++;
+            }
+
+        function removeObjective(event) {
+            const objetivoItem = event.target.closest('.objetivo-item');
+            if (objetivoItem) {
+                objetivoItem.remove();
         }
+}
+
 
         function validateObjectives() {
             const objectiveItems = document.querySelectorAll('.objetivo-item');
