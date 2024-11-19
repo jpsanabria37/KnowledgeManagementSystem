@@ -29,4 +29,6 @@ class Semillero extends Model
     {
         return $this->hasMany(Anteproyecto::class);
     }
+
+
 }

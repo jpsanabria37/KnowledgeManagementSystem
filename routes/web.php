@@ -79,7 +79,9 @@ Route::middleware(['auth', 'role:aprendiz'])->prefix('aprendiz')->name('aprendiz
 
       Route::post('/anteproyectos/{id}/enviar', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'enviarAnteproyecto'])->name('anteproyectos.enviar');
 
-
+      Route::get('/anteproyectos/{id}/generar-pdf', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'generarPdf'])
+      ->name('anteproyectos.generarPdf');
+  
 });
 
 
