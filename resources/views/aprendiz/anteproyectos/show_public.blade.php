@@ -1,8 +1,14 @@
 @extends('layouts.aprendiz')
 
 @section('content')
-    <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-lg shadow-xl">
-        <h1 class="text-3xl font-extrabold text-gray-900 mb-6 border-b-2 border-blue-300 pb-2">
+
+    <div x-data="{ showContent: false }" x-init="showContent = true" 
+         class="bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-lg shadow-xl transition-all duration-500"
+         x-bind:class="showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-90'">
+        
+        <h1 x-data="{ animate: false }" x-init="animate = true" 
+            class="text-3xl font-extrabold text-gray-900 mb-6 border-b-2 border-blue-300 pb-2 "
+            x-bind:class="animate ? 'translate-y-0 opacity-100' : '-translate-y-5 opacity-0'">
             {{ $anteproyecto->titulo }}
         </h1>
 
@@ -25,7 +31,11 @@
             @if (!empty($anteproyecto->colaboradores))
                 <ul class="list-disc pl-6 text-gray-700">
                     @foreach ($anteproyecto->colaboradores as $colaborador)
-                        <li class="mb-1">{{ $colaborador }}</li>
+                        <li class="mb-1" x-data="{ show: false }" x-intersect:enter="show = true"
+                            x-bind:class="show ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'"
+                            class="transition-transform duration-500 ease-in-out">
+                            {{ $colaborador }}
+                        </li>
                     @endforeach
                 </ul>
             @else
@@ -47,4 +57,3 @@
         </a>
     </div>
 @endsection
-
