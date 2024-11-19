@@ -9,6 +9,7 @@ use App\Models\ObjetivoEspecifico;
 use Illuminate\Http\Request;
 use App\Models\Semillero;
 use Illuminate\Support\Facades\Auth; // Agrega esta línea para importar Auth
+use Barryvdh\DomPDF\Facade\Pdf; // Importa la clase para generar PDFs
 
 class AnteproyectoController extends Controller
 {
@@ -244,5 +245,22 @@ public function storeStep4(Request $request, $id)
 
     return redirect()->route('aprendiz.anteproyectos.index')->with('success', 'Anteproyecto enviado correctamente.');
 }
+public function generarPdf($id)
+{
+    // Carga el anteproyecto con relaciones
+    $anteproyecto = Anteproyecto::with([
+        'objetivosEspecificos.actividades',
+        'semillero.grupoLinea.grupo.centro'
+    ])->findOrFail($id);
+
+    // Cargar la vista del PDF
+    $pdf = Pdf::loadView('aprendiz.anteproyectos.pdf', compact('anteproyecto'));
+
+    // Mostrar el PDF sin descargarlo automáticamente
+    return $pdf->stream('anteproyecto_' . $anteproyecto->titulo . '.pdf');
+}
+
+
+
 
 }
