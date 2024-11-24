@@ -13,6 +13,7 @@
                 </ul>
             </div>
         @endif
+
         <form action="{{ route('aprendiz.anteproyectos.storeStep1') }}" method="POST">
             @csrf
             <!-- Campo Semillero -->
@@ -47,6 +48,15 @@
                 <input type="text" name="titulo" id="titulo" value="{{ old('titulo') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" required>
             </div>
 
+            <!-- Palabras Clave -->
+            <div class="mb-4">
+                <label for="tags" class="block text-sm font-medium text-gray-700">Palabras Clave</label>
+                <div id="tags-container" class="flex flex-wrap gap-2">
+                    <input type="text" id="tags-input" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="Escribe y presiona Enter">
+                </div>
+                <input type="hidden" name="tags" id="tags-hidden">
+            </div>
+
             <!-- Descripción -->
             <div class="mb-4">
                 <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
@@ -66,6 +76,46 @@
     </div>
 
     <script>
+        const tagsInput = document.getElementById('tags-input');
+        const tagsContainer = document.getElementById('tags-container');
+        const tagsHidden = document.getElementById('tags-hidden');
+
+        let tags = [];
+
+        tagsInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && tagsInput.value.trim() !== '') {
+                event.preventDefault();
+
+                // Crear un elemento de etiqueta
+                const tag = tagsInput.value.trim();
+                if (!tags.includes(tag)) {
+                    tags.push(tag);
+
+                    const tagElement = document.createElement('span');
+                    tagElement.className = 'bg-green-100 text-green-800 text-sm px-2 py-1 rounded-lg shadow flex items-center gap-1';
+                    tagElement.innerHTML = `${tag} <button type="button" class="text-red-500 font-bold" onclick="removeTag('${tag}')">&times;</button>`;
+
+                    tagsContainer.insertBefore(tagElement, tagsInput);
+                    tagsHidden.value = tags.join(',');
+
+                    tagsInput.value = '';
+                }
+            }
+        });
+
+        function removeTag(tag) {
+            tags = tags.filter(t => t !== tag);
+            tagsHidden.value = tags.join(',');
+
+            // Remover la etiqueta del DOM
+            [...tagsContainer.children].forEach(el => {
+                if (el.textContent.includes(tag)) {
+                    tagsContainer.removeChild(el);
+                }
+            });
+        }
+
+
         function addColaborador() {
             const container = document.getElementById('colaboradores');
             

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('actividades', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('producto_id')->nullable()->constrained('productos')->onDelete('cascade');
             $table->foreignId('objetivo_especifico_id')->references('id')->on('objetivos_especificos')->onDelete('cascade');
             $table->string('nombre');
             $table->date('fecha_inicio');

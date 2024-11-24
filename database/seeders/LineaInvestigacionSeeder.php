@@ -6,6 +6,7 @@ use App\Models\GrupoInvestigacion;
 use App\Models\LineaInvestigacion;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class LineaInvestigacionSeeder extends Seeder
 {
@@ -15,13 +16,14 @@ class LineaInvestigacionSeeder extends Seeder
     public function run(): void
     {
         //
-        $grupos = GrupoInvestigacion::all();
+        $lineas = [
+            ['nombre_linea' => 'Electrónica Automatización y Control'],
+            ['nombre_linea' => 'Teleinformática'],
+            ['nombre_linea' => 'Electricidad'],
+            ['nombre_linea' => 'Telecomunicaciones'],
+        ];
 
-        foreach ($grupos as $grupo) {
-            LineaInvestigacion::create([
-                'nombre' => 'Línea de Investigación ' . $grupo->nombre,
-                'grupo_investigacion_id' => $grupo->id,
-            ]);
-        }
+        DB::table('lineas_investigacion')->insert($lineas);
+
     }
 }

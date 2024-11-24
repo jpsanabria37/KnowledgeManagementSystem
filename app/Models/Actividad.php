@@ -16,10 +16,16 @@ class Actividad extends Model
         'fecha_inicio',
         'fecha_fin',
         'objetivo_especifico_id',
+        'producto_id'
     ];
     public function objetivoEspecifico()
     {
         return $this->belongsTo(ObjetivoEspecifico::class);
+    }
+    
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class);
     }
 
 }

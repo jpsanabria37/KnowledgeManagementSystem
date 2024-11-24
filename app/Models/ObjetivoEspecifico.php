@@ -27,4 +27,9 @@ public function actividades()
     return $this->hasMany(Actividad::class);
 }
 
+public function productos()
+{
+    return $this->hasMany(Producto::class);
+}
+
 }

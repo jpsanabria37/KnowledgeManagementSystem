@@ -17,6 +17,7 @@ class Anteproyecto extends Model
         'justificacion', 
         'alcance', 
         'metodologia', 
+        'tags',
         'cronograma', 
         'recursos_necesarios', 
         'archivo_pdf', 

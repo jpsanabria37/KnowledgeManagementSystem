@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('justificacion')->nullable();
             $table->text('alcance')->nullable();
             $table->text('metodologia')->nullable();
+            $table->string('tags')->nullable();
             $table->string('archivo_poster')->nullable(); // Ruta al archivo poster
             $table->foreignId('semillero_id')->constrained()->onDelete('cascade'); // Relación con semillero
             $table->enum('estado_aprobacion', ['en_proceso', 'aprobado', 'rechazado'])->default('en_proceso'); // Estado predeterminado

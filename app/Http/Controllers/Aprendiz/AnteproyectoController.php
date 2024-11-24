@@ -8,6 +8,7 @@ use App\Models\Actividad;
 use App\Models\ObjetivoEspecifico;
 use Illuminate\Http\Request;
 use App\Models\Semillero;
+use App\Models\Producto;
 use Illuminate\Support\Facades\Auth; // Agrega esta línea para importar Auth
 use Barryvdh\DomPDF\Facade\Pdf; // Importa la clase para generar PDFs
 
@@ -27,6 +28,7 @@ class AnteproyectoController extends Controller
             'descripcion' => 'required|string',
             'objetivo_general' => 'required|string',
             'colaboradores' => 'nullable|array',
+            'tags' => 'nullable|string', // Validamos que sea opcional y texto
             'semillero_id' => 'required|exists:semilleros,id', // Asegúrate de que semillero_id sea obligatorio y exista en la tabla semilleros
         ]);
     
@@ -37,6 +39,7 @@ class AnteproyectoController extends Controller
             'colaboradores' => $validated['colaboradores'] ?? [],
             'user_id' => Auth::id(),
             'paso_actual' => 2,
+            'tags' => $validated['tags'],
             'semillero_id' => $validated['semillero_id'], // Asigna el semillero_id validado
         ]);
     
@@ -81,34 +84,53 @@ class AnteproyectoController extends Controller
 // Paso 3: Añadir Actividades a cada Objetivo Específico
 public function storeStep3(Request $request, $id)
 {
-    // Validar los datos del formulario
-    $validatedData = $request->validate([
-        'actividades.*.id' => 'nullable|exists:actividades,id',
-        'actividades.*.nombre' => 'required|string|max:255',
-        'actividades.*.responsable' => 'required|string|max:255',
-        'actividades.*.fecha_inicio' => 'required|date',
-        'actividades.*.fecha_fin' => 'required|date|after_or_equal:actividades.*.fecha_inicio',
+
+    $validated = $request->validate([
+        'anteproyecto_id' => 'required|exists:anteproyectos,id',
+        'objetivo_especifico_id' => 'required|exists:objetivos_especificos,id',
+        'productos.*.nombre' => 'required|string',
+        'productos.*.descripcion' => 'required|string',
+        'productos.*.actividades.*.nombre' => 'required|string',
+        'productos.*.actividades.*.responsable' => 'required|string',
+        'productos.*.actividades.*.fecha_inicio' => 'required|date',
+        'productos.*.actividades.*.fecha_fin' => 'required|date|after_or_equal:productos.*.actividades.*.fecha_inicio',
     ]);
 
-    // Buscar el objetivo específico
-    $objetivo = ObjetivoEspecifico::findOrFail($id);
+    // Obtener el anteproyecto y el objetivo
+    $anteproyecto = Anteproyecto::find($validated['anteproyecto_id']);
+    $objetivoEspecifico = ObjetivoEspecifico::find($validated['objetivo_especifico_id']);
 
-    foreach ($validatedData['actividades'] as $actividadData) {
-        // Verificar si la actividad ya existe
-        if (!empty($actividadData['id'])) {
-            // Actualizar actividad existente
-            $actividad = Actividad::findOrFail($actividadData['id']);
-            $actividad->update($actividadData);
-        } else {
-            // Crear una nueva actividad
-            $objetivo->actividades()->create($actividadData);
+    foreach ($validated['productos'] as $productoData) {
+        // Si el producto tiene un ID, actualizamos. Si no, lo creamos.
+        $producto = Producto::updateOrCreate(
+            ['id' => $productoData['id'] ?? null], // Busca por ID si existe
+            [
+                'nombre' => $productoData['nombre'],
+                'descripcion' => $productoData['descripcion'],
+                'objetivo_especifico_id' => $objetivoEspecifico->id, // Relación al objetivo específico
+            ]
+        );
+
+        foreach ($productoData['actividades'] as $actividadData) {
+            // Si la actividad tiene un ID, actualizamos. Si no, la creamos.
+            Actividad::updateOrCreate(
+                ['id' => $actividadData['id'] ?? null], // Busca por ID si existe
+                [
+                    'nombre' => $actividadData['nombre'],
+                    'responsable' => $actividadData['responsable'],
+                    'fecha_inicio' => $actividadData['fecha_inicio'],
+                    'fecha_fin' => $actividadData['fecha_fin'],
+                    'producto_id' => $producto->id, // Relación al producto
+                    'objetivo_especifico_id' => $id
+                ]
+            );
         }
     }
 
-    return redirect()
-        ->route('aprendiz.anteproyectos.createStep3', $objetivo->anteproyecto_id)
-        ->with('success', 'Actividades guardadas correctamente.');
+    return back()->with('success', 'Datos guardados correctamente');
 }
+
+
 
 
 public function createStep4($id)
