@@ -121,7 +121,7 @@ public function storeStep3(Request $request, $id)
                     'fecha_inicio' => $actividadData['fecha_inicio'],
                     'fecha_fin' => $actividadData['fecha_fin'],
                     'producto_id' => $producto->id, // Relación al producto
-                    'objetivo_especifico_id' => $id
+                    'objetivo_especifico_id' => $objetivoEspecifico->id
                 ]
             );
         }
