@@ -1,134 +1,48 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anteproyecto PDF</title>
-    <style>
-        /* General Styling */
-        body {
-            font-family: 'Times New Roman', serif;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            line-height: 1.5;
-        }
+<!-- resources/views/aprendiz/dashboard.blade.php -->
+@extends('layouts.aprendiz')
 
-        /* Portada */
-        .cover-page {
-            text-align: center;
-            margin: 100px auto;
-            padding: 0 40px;
-        }
+@section('content')
 
-        .cover-page h1 {
-            font-size: 20px;
-            color: #00A859;
-            font-weight: bold;
-        }
+<form action="{{ route('aprendiz.buscar') }}" method="POST" class="w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg">
+    @csrf <!-- Token de seguridad obligatorio en POST -->
+    <div class="flex items-center space-x-4">
+        <!-- Input de búsqueda -->
+        <input
+            type="text"
+            name="query"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
+            placeholder="Buscar anteproyectos..."
+            value="{{ old('term', $term ?? '') }}"
+            autocomplete="off"
+            required
+        >
 
-        .cover-page p {
-            font-size: 14px;
-            color: #333;
-            text-align: justify;
-            margin-top: 30px;
-            line-height: 1.8;
-        }
+        <!-- Botón de búsqueda -->
+        <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Buscar
+        </button>
+    </div>
+</form>
 
-        .cover-page img {
-            max-height: 100px;
-            margin-bottom: 30px;
-        }
-
-        /* Encabezado */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 50px;
-            text-align: center;
-            background-color: white;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .header img {
-            max-height: 40px;
-        }
-
-        /* Footer */
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 30px;
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-            border-top: 1px solid #ddd;
-        }
-
-        .footer .page-number::after {
-            content: counter(page);
-        }
-
-        /* Page break */
-        .page-break {
-            page-break-before: always;
-        }
-
-        /* Content styling */
-        .section {
-            margin: 20px;
-            padding: 20px;
-            border: 2px solid #00A859;
-            border-radius: 10px;
-            background-color: #F4F4F4;
-        }
-
-        .section h2 {
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: #00A859;
-            border-bottom: 1px solid #00A859;
-            padding-bottom: 5px;
-        }
-
-        .section p {
-            font-size: 12px;
-            text-align: justify;
-        }
-    </style>
-</head>
-<body>
-    <!-- Encabezado con Logo -->
-    <div class="header">
-        <img src="{{ asset('img/logo_sena.png') }}" alt="Logo SENA">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold text-gray-800">Panel de Control</h2>
+        <p class="text-gray-600 mt-2">Aquí puedes gestionar tus semilleros y anteproyectos.</p>
     </div>
 
-    <!-- Portada -->
-    <div class="cover-page">
-        <img src="{{ asset('img/logo_sena.png') }}" alt="Logo SENA">
-        <h1>{{ $anteproyecto->titulo }}</h1>
-        <p>
-            Este documento, titulado "{{ $anteproyecto->titulo }}", ha sido desarrollado como parte del trabajo de investigación llevado a cabo por el semillero "{{ $anteproyecto->semillero->nombre_semillero ?? 'No especificado' }}", adscrito al grupo de investigación "{{ $anteproyecto->semillero->grupoLinea->grupoInvestigacion->nombre_grupo ?? 'No especificado' }}". El propósito de este anteproyecto es proporcionar una base estructurada para el desarrollo del proyecto de investigación en el marco del Centro "{{ $anteproyecto->semillero->grupoLinea->grupoInvestigacion->centro->nombre_centro ?? 'No especificado' }}", en línea con los objetivos del Servicio Nacional de Aprendizaje (SENA). Fecha de elaboración: {{ now()->format('d/m/Y') }}.
-        </p>
+    <!-- Secciones con enlaces rápidos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        <a href="{{ route('aprendiz.semilleros.index') }}" class="block p-4 bg-blue-100 hover:bg-blue-200 rounded-lg shadow">
+            <h3 class="text-lg font-semibold text-blue-800">Ver Semilleros</h3>
+            <p class="text-blue-700 mt-2">Explora todos los semilleros disponibles.</p>
+        </a>
+        <a href="{{ route('aprendiz.anteproyectos.createStep1') }}" class="block p-4 bg-green-100 hover:bg-green-200 rounded-lg shadow">
+            <h3 class="text-lg font-semibold text-green-800">Crear Anteproyecto</h3>
+            <p class="text-green-700 mt-2">Inicia un nuevo anteproyecto en un semillero.</p>
+        </a>
+        <a href="{{ route('aprendiz.anteproyectos.index') }}" class="block p-4 bg-yellow-100 hover:bg-yellow-200 rounded-lg shadow">
+            <h3 class="text-lg font-semibold text-yellow-800">Mis Anteproyectos</h3>
+            <p class="text-yellow-700 mt-2">Consulta y administra tus anteproyectos.</p>
+        </a>
     </div>
-
-    <!-- Salto de página -->
-    <div class="page-break"></div>
-
-    <!-- Contenido del informe -->
-    <div class="section">
-        <h2>Descripción</h2>
-        <p>{{ $anteproyecto->descripcion }}</p>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <p class="page-number">Página </p>
-    </div>
-</body>
-</html>
+@endsection
+ 
