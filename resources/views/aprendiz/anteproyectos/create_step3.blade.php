@@ -66,17 +66,17 @@
             <form action="{{ route('aprendiz.anteproyectos.storeStep3', $anteproyecto->id) }}" method="POST" class="mt-4">
                 @csrf
                 <!-- Campo oculto para el ID del anteproyecto -->
-                <input type="hidden" name="anteproyecto_id" value="{{ $anteproyecto->id }}">
+                <input type="hidden" name="anteproyecto_id" value="{{ $anteproyecto->id }}" autocomplete="off">
 
                 <!-- Campo oculto para el ID del objetivo específico, si aplica -->
-                <input type="hidden" name="objetivo_especifico_id" value="{{ $objetivo->id }}">
+                <input type="hidden" name="objetivo_especifico_id" value="{{ $objetivo->id }}" autocomplete="off">
 
                 <h5 class="font-semibold text-gray-700 mb-2">Añadir Productos</h5>
                 <div id="producto-list-{{ $objetivo->id }}" class="grid grid-cols-1 gap-2">
                     <div class="bg-white p-3 rounded-lg border border-gray-200">
                         <div>
                             <label>Nombre del Producto:</label>
-                            <input type="text" name="productos[0][nombre]" class="w-full border-gray-300 rounded-lg" required>
+                            <input type="text" name="productos[0][nombre]" class="w-full border-gray-300 rounded-lg" required autocomplete="off">
                         </div>
                         <div class="mt-2">
                             <label>Descripción:</label>
@@ -89,31 +89,37 @@
                             <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 grid grid-cols-2 gap-2">
                                 <div>
                                     <label>Nombre de la Actividad:</label>
-                                    <input type="text" name="productos[0][actividades][0][nombre]" class="w-full border-gray-300 rounded-lg" required>
+                                    <input type="text" name="productos[0][actividades][0][nombre]" class="w-full border-gray-300 rounded-lg" required autocomplete="off">
                                 </div>
                                 <div>
                                     <label>Responsable:</label>
-                                    <input type="text" name="productos[0][actividades][0][responsable]" class="w-full border-gray-300 rounded-lg" required>
+                                    <input type="text" name="productos[0][actividades][0][responsable]" class="w-full border-gray-300 rounded-lg" required autocomplete="off">
                                 </div>
                                 <div>
                                     <label>Fecha Inicio:</label>
-                                    <input type="date" name="productos[0][actividades][0][fecha_inicio]" class="w-full border-gray-300 rounded-lg" required>
+                                    <input type="date" name="productos[0][actividades][0][fecha_inicio]" class="w-full border-gray-300 rounded-lg" required autocomplete="off">
                                 </div>
                                 <div>
                                     <label>Fecha Fin:</label>
-                                    <input type="date" name="productos[0][actividades][0][fecha_fin]" class="w-full border-gray-300 rounded-lg" required>
+                                    <input type="date" name="productos[0][actividades][0][fecha_fin]" class="w-full border-gray-300 rounded-lg" required autocomplete="off">
                                 </div>
                             </div>
                         </div>
                         <!-- Botón para añadir más actividades al producto -->
-                        <button type="button" onclick="addActivity({{ $objetivo->id }}, 0)" class="text-blue-500 hover:text-blue-700 mt-2">
-                            + Añadir Actividad
+                        <button 
+                                type="button" 
+                                onclick="addActivity({{ $objetivo->id }}, 0)" 
+                                class="flex items-center justify-center gap-2 bg-blue-600 text-white font-medium px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none transition-all duration-300 mt-5"
+                            >
+                                Añadir Actividad
                         </button>
                     </div>
                 </div>
 
                 <!-- Botón para añadir más productos -->
-                <button type="button" onclick="addProducto({{ $objetivo->id }})" class="text-blue-500 hover:text-blue-700 mt-2">
+                <button type="button" 
+                onclick="addProducto({{ $objetivo->id }})" 
+                class="flex items-center justify-center gap-2 bg-blue-600 text-white font-medium px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none transition-all duration-300 mt-5">
                     + Añadir Producto
                 </button>
 
@@ -143,6 +149,7 @@ function addProducto(objetivoId) {
     const uniqueId = Date.now();
     const newProducto = document.createElement('div');
     newProducto.classList.add('bg-white', 'p-3', 'rounded-lg', 'border', 'border-gray-200', 'mt-2');
+    newProducto.setAttribute('id', `producto-${uniqueId}`);
 
     newProducto.innerHTML = `
         <div>
@@ -174,8 +181,13 @@ function addProducto(objetivoId) {
                 </div>
             </div>
         </div>
-        <button type="button" onclick="addActivity(${objetivoId}, ${uniqueId})" class="text-blue-500 hover:text-blue-700 mt-2">
+        <button type="button" onclick="addActivity(${objetivoId}, ${uniqueId})" 
+        class="flex items-center justify-center gap-2 bg-blue-600 text-white font-medium px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none transition-all duration-300 mt-5">
             + Añadir Actividad
+        </button>
+        <button type="button" onclick="removeProducto(${uniqueId})" 
+        class="flex items-center justify-center gap-2 bg-red-500 text-white font-medium px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none transition-all duration-300 mt-5"">
+            - Eliminar Producto
         </button>
     `;
     container.appendChild(newProducto);
@@ -183,10 +195,11 @@ function addProducto(objetivoId) {
 
 // Función para añadir nuevas actividades dinámicamente
 function addActivity(objetivoId, productoId) {
-    const container = document.getElementById('actividad-list-' + objetivoId + '-' + productoId);
+    const container = document.getElementById(`actividad-list-${objetivoId}-${productoId}`);
     const uniqueId = Date.now();
     const newActivity = document.createElement('div');
     newActivity.classList.add('bg-gray-50', 'p-3', 'rounded-lg', 'border', 'border-gray-200', 'grid', 'grid-cols-2', 'gap-2', 'mt-2');
+    newActivity.setAttribute('id', `actividad-${uniqueId}`);
 
     newActivity.innerHTML = `
         <div>
@@ -205,8 +218,29 @@ function addActivity(objetivoId, productoId) {
             <label>Fecha Fin:</label>
             <input type="date" name="productos[${productoId}][actividades][${uniqueId}][fecha_fin]" class="w-full border-gray-300 rounded-lg" required>
         </div>
+        <button type="button" onclick="removeActivity(${uniqueId})" 
+        class="flex items-center justify-center gap-2 bg-red-500 text-white font-medium px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none transition-all duration-300 mt-5 w-60">
+            - Eliminar Actividad 
+        </button>
     `;
     container.appendChild(newActivity);
 }
-    </script>
+
+// Función para eliminar un producto dinámicamente
+function removeProducto(productoId) {
+    const productoElement = document.getElementById(`producto-${productoId}`);
+    if (productoElement) {
+        productoElement.remove();
+    }
+}
+
+// Función para eliminar una actividad dinámicamente
+function removeActivity(activityId) {
+    const activityElement = document.getElementById(`actividad-${activityId}`);
+    if (activityElement) {
+        activityElement.remove();
+    }
+}
+
+</script>
 @endsection

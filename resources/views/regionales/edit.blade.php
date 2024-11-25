@@ -31,7 +31,7 @@
 
                     <div class="form-group">
                         <label for="nombre_regional">Nombre de la Regional</label>
-                        <input type="text" name="nombre_regional" class="form-control" id="nombre_regional" value="{{ old('nombre_regional', $regional->nombre_regional) }}" placeholder="Ingrese el nombre de la regional" required>
+                        <input type="text" name="nombre_regional" class="form-control" id="nombre_regional" value="{{ old('nombre_regional', $regional->nombre_regional) }}" placeholder="Ingrese el nombre de la regional" required autocomplete="off">
                     </div>
 
                     <div class="form-group">
@@ -41,7 +41,7 @@
 
                     <div class="form-group">
                         <label for="ubicacion_regional">Ubicación de la Regional</label>
-                        <input type="text" name="ubicacion_regional" class="form-control" id="ubicacion_regional" value="{{ old('ubicacion_regional', $regional->ubicacion_regional) }}" placeholder="Ingrese la ubicación de la regional" required>
+                        <input type="text" name="ubicacion_regional" class="form-control" id="ubicacion_regional" value="{{ old('ubicacion_regional', $regional->ubicacion_regional) }}" placeholder="Ingrese la ubicación de la regional" required autocomplete="off">
                     </div>
 
                     <div class="form-group">

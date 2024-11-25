@@ -22,7 +22,7 @@
             <!-- Campo Título -->
             <div class="mb-4">
                 <label for="titulo" class="block text-gray-700 font-medium">Título</label>
-                <input type="text" name="titulo" id="titulo" value="{{ old('titulo') }}" class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
+                <input type="text" name="titulo" id="titulo" value="{{ old('titulo') }}" class="w-full mt-1 p-2 border border-gray-300 rounded-md" required autocomplete="off">
                 @error('titulo')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
@@ -76,9 +76,9 @@
             <!-- Campo Colaboradores -->
             <div class="mb-4">
                 <label for="colaboradores" class="block text-gray-700 font-medium">Colaboradores</label>
-                <input type="text" name="colaboradores[]" class="w-full mt-1 p-2 border border-gray-300 rounded-md mb-2" placeholder="Colaborador 1" value="{{ old('colaboradores.0') }}">
-                <input type="text" name="colaboradores[]" class="w-full mt-1 p-2 border border-gray-300 rounded-md mb-2" placeholder="Colaborador 2" value="{{ old('colaboradores.1') }}">
-                <input type="text" name="colaboradores[]" class="w-full mt-1 p-2 border border-gray-300 rounded-md mb-2" placeholder="Colaborador 3" value="{{ old('colaboradores.2') }}">
+                <input type="text" name="colaboradores[]" class="w-full mt-1 p-2 border border-gray-300 rounded-md mb-2" placeholder="Colaborador 1" value="{{ old('colaboradores.0') }}" autocomplete="off">
+                <input type="text" name="colaboradores[]" class="w-full mt-1 p-2 border border-gray-300 rounded-md mb-2" placeholder="Colaborador 2" value="{{ old('colaboradores.1') }}" autocomplete="off">
+                <input type="text" name="colaboradores[]" class="w-full mt-1 p-2 border border-gray-300 rounded-md mb-2" placeholder="Colaborador 3" value="{{ old('colaboradores.2') }}" autocomplete="off">
                 <!-- Se pueden agregar más campos de colaboradores según se necesite -->
             </div>
 
@@ -107,7 +107,7 @@
             <!-- Fecha de Inicio -->
             <div class="mb-4">
                 <label for="fecha_inicio" class="block text-gray-700 font-medium">Fecha de Inicio</label>
-                <input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ old('fecha_inicio') }}" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                <input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ old('fecha_inicio') }}" class="w-full mt-1 p-2 border border-gray-300 rounded-md" autocomplete="off">
                 @error('fecha_inicio')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
@@ -116,7 +116,7 @@
             <!-- Fecha de Fin -->
             <div class="mb-4">
                 <label for="fecha_fin" class="block text-gray-700 font-medium">Fecha de Fin</label>
-                <input type="date" name="fecha_fin" id="fecha_fin" value="{{ old('fecha_fin') }}" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                <input type="date" name="fecha_fin" id="fecha_fin" value="{{ old('fecha_fin') }}" class="w-full mt-1 p-2 border border-gray-300 rounded-md" autocomplete="off">
                 @error('fecha_fin')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
@@ -127,11 +127,11 @@
                 <label for="pdf_option" class="block text-gray-700 font-medium">PDF del Anteproyecto</label>
                 <div class="flex items-center space-x-4">
                     <label class="flex items-center">
-                        <input type="radio" name="pdf_option" value="generate" class="mr-2" {{ old('pdf_option', 'generate') == 'generate' ? 'checked' : '' }}>
+                        <input type="radio" name="pdf_option" value="generate" class="mr-2" {{ old('pdf_option', 'generate') == 'generate' ? 'checked' : '' }} autocomplete="off">
                         Generar PDF automáticamente
                     </label>
                     <label class="flex items-center">
-                        <input type="radio" name="pdf_option" value="upload" class="mr-2" {{ old('pdf_option') == 'upload' ? 'checked' : '' }}>
+                        <input type="radio" name="pdf_option" value="upload" class="mr-2" {{ old('pdf_option') == 'upload' ? 'checked' : '' }} autocomplete="off">
                         Subir PDF manualmente
                     </label>
                 </div>
@@ -143,7 +143,7 @@
             <!-- Campo para subir PDF (visible solo si selecciona la opción de subir) -->
             <div class="mb-4" id="upload_pdf_section" style="display: none;">
                 <label for="archivo_pdf" class="block text-gray-700 font-medium">Subir PDF</label>
-                <input type="file" name="archivo_pdf" id="archivo_pdf" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                <input type="file" name="archivo_pdf" id="archivo_pdf" class="w-full mt-1 p-2 border border-gray-300 rounded-md" autocomplete="off">
             </div>
 
             <!-- Botón de Envío -->
