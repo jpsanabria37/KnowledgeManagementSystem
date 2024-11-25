@@ -30,7 +30,7 @@
 
                     <div class="form-group">
                         <label for="nombre_linea">Nombre de la Línea de Investigación</label>
-                        <input type="text" name="nombre_linea" class="form-control" id="nombre_linea" value="{{ old('nombre_linea') }}" placeholder="Ingrese el nombre de la línea" required>
+                        <input type="text" name="nombre_linea" class="form-control" id="nombre_linea" value="{{ old('nombre_linea') }}" placeholder="Ingrese el nombre de la línea" required autocomplete="off">
                     </div>
 
                     <div class="form-group">

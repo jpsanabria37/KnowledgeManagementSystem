@@ -34,7 +34,7 @@
                 <label for="colaboradores" class="block text-sm font-medium text-gray-700">Colaboradores</label>
                 <div id="colaboradores" class="flex flex-col gap-2">
                     <div class="flex items-center gap-2">
-                        <input type="text" name="colaboradores[]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="Nombre del colaborador" required>
+                        <input type="text" name="colaboradores[]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="Nombre del colaborador" required autocomplete="off">
                         <button type="button" onclick="addColaborador()" class="p-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600">
                             <span class="text-lg font-bold">+</span>
                         </button>
@@ -45,7 +45,7 @@
             <!-- Título -->
             <div class="mb-4">
                 <label for="titulo" class="block text-sm font-medium text-gray-700">Título del Anteproyecto</label>
-                <input type="text" name="titulo" id="titulo" value="{{ old('titulo') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" required>
+                <input type="text" name="titulo" id="titulo" value="{{ old('titulo') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" required autocomplete="off">
             </div>
 
             <!-- Palabras Clave -->
@@ -54,7 +54,7 @@
                 <div id="tags-container" class="flex flex-wrap gap-2">
                     <input type="text" id="tags-input" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="Escribe y presiona Enter">
                 </div>
-                <input type="hidden" name="tags" id="tags-hidden">
+                <input type="hidden" name="tags" id="tags-hidden" autocomplete="off">
             </div>
 
             <!-- Descripción -->

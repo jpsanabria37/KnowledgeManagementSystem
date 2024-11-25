@@ -33,7 +33,7 @@
                 <!-- Formulario de búsqueda -->
                 <form method="GET" action="{{ route('regionales.index') }}" class="mb-4">
                     <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Buscar por nombre o ubicación..." value="{{ request('search') }}">
+                        <input type="text" name="search" class="form-control" placeholder="Buscar por nombre o ubicación..." value="{{ request('search') }}" autocomplete="off">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="submit">
                                 <i class="fas fa-search"></i> Buscar

@@ -21,7 +21,7 @@
             <!-- Objetivo Específico -->
             <div class="objetivo-item mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <label class="block text-gray-700 font-bold mb-2">Objetivo Específico:</label>
-                <input type="text" name="objetivos_especificos[0][nombre]" class="w-full border border-gray-300 rounded-lg p-2 mb-4" required>
+                <input type="text" name="objetivos_especificos[0][nombre]" class="w-full border border-gray-300 rounded-lg p-2 mb-4" required autocomplete="off">
 
                 <label class="block text-gray-700 font-bold mb-2">Recursos Necesarios:</label>
                 <textarea name="objetivos_especificos[0][recursos_necesarios]" class="w-full border border-gray-300 rounded-lg p-2" placeholder="Especifica los recursos necesarios"></textarea>

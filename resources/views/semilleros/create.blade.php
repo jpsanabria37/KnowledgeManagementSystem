@@ -17,13 +17,13 @@
                 <!-- Nombre del Semillero -->
                 <div class="form-group">
                     <label for="nombre_semillero">Nombre del Semillero:</label>
-                    <input type="text" name="nombre_semillero" id="nombre_semillero" class="form-control" placeholder="Ingrese el nombre del semillero" required>
+                    <input type="text" name="nombre_semillero" id="nombre_semillero" class="form-control" placeholder="Ingrese el nombre del semillero" required autocomplete="off">
                 </div>
 
                 <!-- Lider del Semillero -->
                 <div class="form-group">
                     <label for="lider_semillero">Líder del Semillero:</label>
-                    <input type="text" name="lider_semillero" id="lider_semillero" class="form-control" placeholder="Ingrese el nombre del líder del semillero">
+                    <input type="text" name="lider_semillero" id="lider_semillero" class="form-control" placeholder="Ingrese el nombre del líder del semillero" autocomplete="off">
                 </div>
 
                 <!-- Seleccionar Grupo y Línea de Investigación -->

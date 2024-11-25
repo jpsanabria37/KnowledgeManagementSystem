@@ -31,7 +31,7 @@
 
                     <div class="form-group">
                         <label for="nombre_centro">Nombre del Centro</label>
-                        <input type="text" name="nombre_centro" class="form-control" id="nombre_centro" value="{{ old('nombre_centro', $centro->nombre_centro) }}" placeholder="Ingrese el nombre del centro" required>
+                        <input type="text" name="nombre_centro" class="form-control" id="nombre_centro" value="{{ old('nombre_centro', $centro->nombre_centro) }}" placeholder="Ingrese el nombre del centro" required autocomplete="off">
                     </div>
 
                     <div class="form-group">

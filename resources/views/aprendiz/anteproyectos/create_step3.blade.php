@@ -66,17 +66,17 @@
             <form action="{{ route('aprendiz.anteproyectos.storeStep3', $anteproyecto->id) }}" method="POST" class="mt-4">
                 @csrf
                 <!-- Campo oculto para el ID del anteproyecto -->
-                <input type="hidden" name="anteproyecto_id" value="{{ $anteproyecto->id }}">
+                <input type="hidden" name="anteproyecto_id" value="{{ $anteproyecto->id }}" autocomplete="off">
 
                 <!-- Campo oculto para el ID del objetivo específico, si aplica -->
-                <input type="hidden" name="objetivo_especifico_id" value="{{ $objetivo->id }}">
+                <input type="hidden" name="objetivo_especifico_id" value="{{ $objetivo->id }}" autocomplete="off">
 
                 <h5 class="font-semibold text-gray-700 mb-2">Añadir Productos</h5>
                 <div id="producto-list-{{ $objetivo->id }}" class="grid grid-cols-1 gap-2">
                     <div class="bg-white p-3 rounded-lg border border-gray-200">
                         <div>
                             <label>Nombre del Producto:</label>
-                            <input type="text" name="productos[0][nombre]" class="w-full border-gray-300 rounded-lg" required>
+                            <input type="text" name="productos[0][nombre]" class="w-full border-gray-300 rounded-lg" required autocomplete="off">
                         </div>
                         <div class="mt-2">
                             <label>Descripción:</label>
@@ -89,19 +89,19 @@
                             <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 grid grid-cols-2 gap-2">
                                 <div>
                                     <label>Nombre de la Actividad:</label>
-                                    <input type="text" name="productos[0][actividades][0][nombre]" class="w-full border-gray-300 rounded-lg" required>
+                                    <input type="text" name="productos[0][actividades][0][nombre]" class="w-full border-gray-300 rounded-lg" required autocomplete="off">
                                 </div>
                                 <div>
                                     <label>Responsable:</label>
-                                    <input type="text" name="productos[0][actividades][0][responsable]" class="w-full border-gray-300 rounded-lg" required>
+                                    <input type="text" name="productos[0][actividades][0][responsable]" class="w-full border-gray-300 rounded-lg" required autocomplete="off">
                                 </div>
                                 <div>
                                     <label>Fecha Inicio:</label>
-                                    <input type="date" name="productos[0][actividades][0][fecha_inicio]" class="w-full border-gray-300 rounded-lg" required>
+                                    <input type="date" name="productos[0][actividades][0][fecha_inicio]" class="w-full border-gray-300 rounded-lg" required autocomplete="off">
                                 </div>
                                 <div>
                                     <label>Fecha Fin:</label>
-                                    <input type="date" name="productos[0][actividades][0][fecha_fin]" class="w-full border-gray-300 rounded-lg" required>
+                                    <input type="date" name="productos[0][actividades][0][fecha_fin]" class="w-full border-gray-300 rounded-lg" required autocomplete="off">
                                 </div>
                             </div>
                         </div>
