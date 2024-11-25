@@ -239,7 +239,7 @@ public function storeStep4(Request $request, $id)
         // Verificar que el usuario sea el creador del anteproyecto
         $anteproyecto = Anteproyecto::where('id', $id)
                         ->where('user_id', auth()->id()) // Asegura que sea del usuario logueado
-                        ->with(['semillero', 'creador'])
+                        ->with(['semillero.grupoLinea.grupo.centro', 'creador', 'objetivosEspecificos.productos.actividades', 'objetivosEspecificos.actividades'])
                         ->firstOrFail();
     
         return view('aprendiz.anteproyectos.show', compact('anteproyecto'));
@@ -249,7 +249,7 @@ public function storeStep4(Request $request, $id)
     public function showPublic($id)
     {
         // Permitir a cualquier usuario ver el anteproyecto en modo lectura
-        $anteproyecto = Anteproyecto::with(['semillero', 'creador'])->findOrFail($id);
+        $anteproyecto = Anteproyecto::with([ 'semillero.grupoLinea.grupo.centro', 'creador',  'objetivosEspecificos.productos.actividades', 'objetivosEspecificos.actividades'])->findOrFail($id);
 
         return view('aprendiz.anteproyectos.show_public', compact('anteproyecto'));
     }
@@ -271,6 +271,7 @@ public function generarPdf($id)
 {
     // Carga el anteproyecto con relaciones
     $anteproyecto = Anteproyecto::with([
+        'objetivosEspecificos.productos.actividades',
         'objetivosEspecificos.actividades',
         'semillero.grupoLinea.grupo.centro'
     ])->findOrFail($id);
@@ -283,6 +284,19 @@ public function generarPdf($id)
 }
 
 
+public function buscar(Request $request)
+{
+    // Validar la entrada del usuario
+    $request->validate([
+        'query' => 'required|string|min:1',
+    ]);
+
+    $term = $request->input('query'); // Obtener el término de búsqueda
+    $resultados = Anteproyecto::query()->buscar2($term)->get(); // Usar el scope buscar2 definido en el modelo
+
+    // Devolver la vista con los resultados
+    return view('aprendiz.resultados', compact('resultados', 'term'));
+}
 
 
 }

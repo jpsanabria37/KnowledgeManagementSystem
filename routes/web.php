@@ -56,7 +56,7 @@ Route::middleware(['auth', 'role:aprendiz'])->prefix('aprendiz')->name('aprendiz
 // Ruta para ver los semilleros
     Route::get('/semilleros', [App\Http\Controllers\Aprendiz\SemilleroController::class, 'index'])->name('semilleros.index');
     Route::get('/semilleros/{id}', [App\Http\Controllers\Aprendiz\SemilleroController::class, 'show'])->name('semilleros.show');
-
+    Route::post('/buscar', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'buscar'])->name('buscar');
       // Ruta para ver todos los anteproyectos del aprendiz
       Route::get('/anteproyectos', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'index'])->name('anteproyectos.index');
 
@@ -81,6 +81,9 @@ Route::middleware(['auth', 'role:aprendiz'])->prefix('aprendiz')->name('aprendiz
 
       Route::get('/anteproyectos/{id}/generar-pdf', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'generarPdf'])
       ->name('anteproyectos.generarPdf');
+
+
+
   
 });
 

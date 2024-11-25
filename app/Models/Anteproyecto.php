@@ -38,6 +38,44 @@ class Anteproyecto extends Model
     ];
 
 
+    public function scopeBuscar($query, $term)
+    {
+        // Si el término es corto, priorizamos búsquedas simples (por LIKE)
+        if (strlen($term) < 3) {
+            return $query->where('titulo', 'LIKE', "%$term%")
+                ->orWhere('tags', 'LIKE', "%$term%")
+                ->orWhere('descripcion', 'LIKE', "%$term%");
+        }
+
+        // Si es más largo, usamos búsquedas más potentes (por FULLTEXT, si aplica)
+        return $query->whereRaw("MATCH(titulo, descripcion, tags, objetivo_general) AGAINST(? IN BOOLEAN MODE)", [$term]);
+    }
+
+    public function scopeBuscar2($query, $term)
+    {
+        $query->where('titulo', 'LIKE', "%$term%")
+            ->orWhere('tags', 'LIKE', "%$term%")
+            ->orWhere('descripcion', 'LIKE', "%$term%")
+            ->orWhere('objetivo_general', 'LIKE', "%$term%")
+            // Búsqueda en objetivos específicos
+            ->orWhereHas('objetivosEspecificos', function ($q) use ($term) {
+                $q->where('descripcion', 'LIKE', "%$term%");
+            })
+            // Búsqueda en productos
+            ->orWhereHas('objetivosEspecificos.productos', function ($q) use ($term) {
+                $q->where('nombre', 'LIKE', "%$term%")
+                    ->orWhere('descripcion', 'LIKE', "%$term%");
+            })
+            // Búsqueda en actividades
+            ->orWhereHas('objetivosEspecificos.productos.actividades', function ($q) use ($term) {
+                $q->where('nombre', 'LIKE', "%$term%")
+                    ->orWhere('responsable', 'LIKE', "%$term%");
+            });
+
+        return $query;
+    }
+
+
       // Relación con el usuario creador
     public function creador()
     {

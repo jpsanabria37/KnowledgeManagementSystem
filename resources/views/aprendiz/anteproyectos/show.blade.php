@@ -4,7 +4,7 @@
     <div class="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-lg">
         <!-- Título Principal -->
         <h1 class="text-4xl font-extrabold text-blue-900 mb-6">{{ $anteproyecto->titulo }}</h1>
-        <p class="text-gray-500 mb-8">Creado por: <strong>{{ $anteproyecto->realizado_por }}</strong></p>
+        <p class="text-gray-500 mb-8">Creado por: <strong>{{ $anteproyecto->creador->name }} - No. Ficha: {{ $anteproyecto->creador->ficha }} - {{ $anteproyecto->creador->programa }} </strong></p>
 
         <!-- Sección de Detalles del Anteproyecto -->
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -65,29 +65,39 @@
             @endif
         </div>
 
-        <!-- Actividades por Objetivo -->
-        <div class="mt-8 bg-gray-50 p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Actividades por Objetivo</h2>
-            @foreach ($anteproyecto->objetivosEspecificos as $objetivo)
-                <div class="mb-6">
-                    <h3 class="text-xl font-semibold text-blue-800">{{ $objetivo->nombre }}</h3>
-                    <p class="text-gray-700 mb-2">Recursos Necesarios: <strong>{{ $objetivo->recursos_necesarios }}</strong></p>
-                    <table class="w-full border-collapse border border-gray-300 text-sm">
+        <div class="mt-8 bg-gray-50 p-6 rounded-lg shadow-lg space-y-8">
+    <h2 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">Productos y Actividades por Objetivo</h2>
+
+    @foreach ($anteproyecto->objetivosEspecificos as $objetivo)
+        <div class="bg-white rounded-lg p-6 shadow-md border border-gray-200">
+            <!-- Titulo del Objetivo -->
+            <h3 class="text-2xl font-semibold text-indigo-600 mb-4">{{ $objetivo->nombre }}</h3>
+            <p class="text-gray-700 mb-4 text-sm italic">Recursos Necesarios: <span class="font-medium">{{ $objetivo->recursos_necesarios }}</span></p>
+
+            <!-- Productos del Objetivo -->
+            @foreach ($objetivo->productos as $producto)
+                <div class="bg-gray-100 p-4 rounded-lg mb-6 shadow-sm">
+                    <!-- Titulo del Producto -->
+                    <h4 class="text-xl font-semibold text-green-600 mb-3">{{ $producto->nombre }}</h4>
+                    <p class="text-gray-600 mb-3">{{ $producto->descripcion }}</p>
+
+                    <!-- Tabla de Actividades del Producto -->
+                    <table class="w-full table-auto border-collapse border border-gray-300 text-sm">
                         <thead>
                             <tr class="bg-blue-100">
-                                <th class="border border-gray-300 px-4 py-2 text-left">Actividad</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left">Responsable</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left">Fecha Inicio</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left">Fecha Fin</th>
+                                <th class="border border-gray-300 px-6 py-3 text-left text-blue-700 font-medium">Actividad</th>
+                                <th class="border border-gray-300 px-6 py-3 text-left text-blue-700 font-medium">Responsable</th>
+                                <th class="border border-gray-300 px-6 py-3 text-left text-blue-700 font-medium">Fecha Inicio</th>
+                                <th class="border border-gray-300 px-6 py-3 text-left text-blue-700 font-medium">Fecha Fin</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($objetivo->actividades as $actividad)
-                                <tr>
-                                    <td class="border border-gray-300 px-4 py-2">{{ $actividad->nombre }}</td>
-                                    <td class="border border-gray-300 px-4 py-2">{{ $actividad->responsable }}</td>
-                                    <td class="border border-gray-300 px-4 py-2">{{ $actividad->fecha_inicio }}</td>
-                                    <td class="border border-gray-300 px-4 py-2">{{ $actividad->fecha_fin }}</td>
+                        <tbody class="divide-y divide-gray-200">
+                            @foreach ($producto->actividades as $actividad)
+                                <tr class="hover:bg-blue-50">
+                                    <td class="border border-gray-300 px-6 py-4">{{ $actividad->nombre }}</td>
+                                    <td class="border border-gray-300 px-6 py-4">{{ $actividad->responsable }}</td>
+                                    <td class="border border-gray-300 px-6 py-4">{{ $actividad->fecha_inicio }}</td>
+                                    <td class="border border-gray-300 px-6 py-4">{{ $actividad->fecha_fin }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -95,6 +105,9 @@
                 </div>
             @endforeach
         </div>
+    @endforeach
+</div>
+
 
         <!-- Sección de Relaciones (Semillero, Grupo de Investigación, Centro) -->
         <div class="mt-8 bg-gray-50 p-6 rounded-lg shadow-md">
@@ -109,18 +122,18 @@
                 @endif
 
                 <!-- Grupo de Investigación -->
-                @if($anteproyecto->semillero && $anteproyecto->semillero->grupoInvestigacion)
+                @if($anteproyecto->semillero && $anteproyecto->semillero->grupoLinea->grupo->nombre_grupo)
                     <div>
                         <h3 class="text-lg font-semibold text-gray-700">Grupo de Investigación</h3>
-                        <p class="text-gray-600">{{ $anteproyecto->semillero->grupoInvestigacion->nombre_grupo }}</p>
+                        <p class="text-gray-600">{{ $anteproyecto->semillero->grupoLinea->grupo->nombre_grupo }}</p>
                     </div>
                 @endif
 
                 <!-- Centro -->
-                @if($anteproyecto->semillero && $anteproyecto->semillero->grupoInvestigacion && $anteproyecto->semillero->grupoInvestigacion->centro)
+                @if($anteproyecto->semillero && $anteproyecto->semillero->grupoLinea->grupo->centro)
                     <div>
                         <h3 class="text-lg font-semibold text-gray-700">Centro</h3>
-                        <p class="text-gray-600">{{ $anteproyecto->semillero->grupoInvestigacion->centro->nombre_centro }}</p>
+                        <p class="text-gray-600">{{ $anteproyecto->semillero->grupoLinea->grupo->centro->nombre_centro }}  - {{ $anteproyecto->semillero->grupoLinea->grupo->centro->regional->nombre_regional}}</p>
                     </div>
                 @endif
             </div>

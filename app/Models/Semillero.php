@@ -15,7 +15,7 @@ class Semillero extends Model
     // Relación con grupos a través de la tabla intermedia
     public function grupos()
     {
-        return $this->hasManyThrough(Grupo::class, 'grupo_linea', 'semillero_id', 'id', 'id', 'grupo_id');
+        return $this->hasManyThrough(GrupoLinea::class, 'grupo_linea', 'semillero_id', 'id', 'id', 'grupo_id');
     }
 
 
