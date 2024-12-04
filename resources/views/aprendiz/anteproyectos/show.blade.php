@@ -150,7 +150,10 @@
                 <form method="POST" action="{{ route('aprendiz.anteproyectos.eliminarPoster', $anteproyecto->id) }}">
                     @csrf
                     @method('DELETE')
-                    <button class="text-red-600 underline hover:text-red-800">Eliminar</button>
+                    <button class="px-4 py-2 border border-red-600 text-red-600 rounded-lg bg-white hover:bg-red-600 hover:text-white hover:shadow-lg transition duration-300 ease-in-out">
+                        Eliminar
+                    </button>
+
                 </form>
             </div>
         @else
@@ -182,7 +185,9 @@
                 <form method="POST" action="{{ route('aprendiz.anteproyectos.eliminarVideo', $anteproyecto->id) }}" class="mt-4">
                     @csrf
                     @method('DELETE')
-                    <button class="text-red-600 underline hover:text-red-800">Eliminar</button>
+                    <button class="px-4 py-2 border border-red-600 text-red-600 rounded-lg bg-white hover:bg-red-600 hover:text-white hover:shadow-lg transition duration-300 ease-in-out">
+                        Eliminar
+                    </button>
                 </form>
             </div>
         @else
