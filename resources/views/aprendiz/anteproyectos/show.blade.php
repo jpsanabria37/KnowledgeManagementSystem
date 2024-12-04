@@ -144,7 +144,7 @@
         <h3 class="text-xl font-semibold text-gray-700">Póster</h3>
         @if($anteproyecto->poster_path)
             <div class="mt-4 flex gap-4 items-center">
-                <a href="{{ Storage::url($anteproyecto->poster_path) }}" target="_blank" class="bg-blue-600 text-white px-5 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200">
+                <a href="{{ asset($anteproyecto->poster_path)}}" target="_blank" class="bg-blue-600 text-white px-5 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200">
                     Ver Póster
                 </a>
                 <form method="POST" action="{{ route('aprendiz.anteproyectos.eliminarPoster', $anteproyecto->id) }}">
@@ -175,10 +175,10 @@
         @if($anteproyecto->video_path)
             <div class="flex flex-col mt-4 gap-4 items-center">
                 <div class="flex gap-4">
-                    <a href="{{ Storage::url($anteproyecto->video_path) }}" target="_blank" class="bg-blue-600 text-white px-5 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200">
+                    <a href="{{ asset($anteproyecto->video_path) }}" target="_blank" class="bg-blue-600 text-white px-5 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200">
                         Ver en Otra Pestaña
                     </a>
-                    <a href="{{ Storage::url($anteproyecto->video_path) }}" download class="bg-gray-600 text-white px-5 py-2 rounded-md shadow hover:bg-gray-700 transition duration-200">
+                    <a href="{{asset($anteproyecto->video_path)}}" download class="bg-gray-600 text-white px-5 py-2 rounded-md shadow hover:bg-gray-700 transition duration-200">
                         Descargar Video
                     </a>
                 </div>

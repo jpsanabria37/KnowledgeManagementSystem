@@ -323,9 +323,11 @@ public function subirPoster(Request $request, $id)
     }
 
     // Subir el nuevo póster
-    $path = $request->file('poster')->store('posters', 'public');
-    $anteproyecto->poster_path = $path;
+    $path = $request->file('poster')->move(public_path('storage/posters'), $request->file('poster')->getClientOriginalName());
+    $anteproyecto->poster_path = 'storage/posters/' . $request->file('poster')->getClientOriginalName();
     $anteproyecto->save();
+
+    
 
     return redirect()->back()->with('success', 'Póster subido correctamente.');
 }
@@ -354,40 +356,49 @@ public function subirVideo(Request $request, $id)
     }
 
     // Subir el nuevo video
-    $videoPath = $request->file('video')->store('videos', 'public');
-    $anteproyecto->video_path = $videoPath;
+    $path = $request->file('video')->move(public_path('storage/videos'), $request->file('video')->getClientOriginalName());
+    $anteproyecto->video_path = 'storage/videos/' . $request->file('video')->getClientOriginalName();
     $anteproyecto->save();
-
     return redirect()->back()->with('success', 'Video subido correctamente.');
 }
 
 
 
-    public function eliminarPoster($id)
-    {
-        $anteproyecto = Anteproyecto::findOrFail($id);
+public function eliminarPoster($id)
+{
+    $anteproyecto = Anteproyecto::findOrFail($id);
 
-        if ($anteproyecto->poster_path) {
-            Storage::delete($anteproyecto->poster_path);
-            $anteproyecto->poster_path = null;
-            $anteproyecto->save();
+    if ($anteproyecto->poster_path) {
+        // Eliminar el archivo del disco 'public'
+        if (Storage::disk('public')->exists($anteproyecto->poster_path)) {
+            Storage::disk('public')->delete($anteproyecto->poster_path);
         }
 
-        return redirect()->back()->with('success', 'Póster eliminado correctamente.');
+        // Eliminar la referencia en la base de datos
+        $anteproyecto->poster_path = null;
+        $anteproyecto->save();
     }
 
-    public function eliminarVideo($id)
-    {
-        $anteproyecto = Anteproyecto::findOrFail($id);
+    return redirect()->back()->with('success', 'Póster eliminado correctamente.');
+}
 
-        if ($anteproyecto->video_path) {
-            Storage::delete($anteproyecto->video_path);
-            $anteproyecto->video_path = null;
-            $anteproyecto->save();
+public function eliminarVideo($id)
+{
+    $anteproyecto = Anteproyecto::findOrFail($id);
+
+    if ($anteproyecto->video_path) {
+        // Eliminar el archivo del disco 'public'
+        if (Storage::disk('public')->exists($anteproyecto->video_path)) {
+            Storage::disk('public')->delete($anteproyecto->video_path);
         }
 
-        return redirect()->back()->with('success', 'Video eliminado correctamente.');
+        // Eliminar la referencia en la base de datos
+        $anteproyecto->video_path = null;
+        $anteproyecto->save();
     }
+
+    return redirect()->back()->with('success', 'Video eliminado correctamente.');
+}
 
 
 }
