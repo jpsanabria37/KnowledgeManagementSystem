@@ -28,6 +28,8 @@ return new class extends Migration
             $table->enum('estado_creacion', ['incompleto', 'completo', 'enviado'])->default('incompleto');
             $table->integer('paso_actual')->default(1);
             $table->timestamps();
+            $table->string('poster_path')->nullable();
+            $table->string('video_path')->nullable();
         });
         
     }

@@ -84,6 +84,11 @@ Route::middleware(['auth', 'role:aprendiz'])->prefix('aprendiz')->name('aprendiz
 
 
 
+      Route::post('/anteproyectos/{id}/subir-poster', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'subirPoster'])->name('anteproyectos.subirPoster');
+      Route::post('/anteproyectos/{id}/subir-video', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'subirVideo'])->name('anteproyectos.subirVideo');
+      Route::delete('/anteproyectos/{id}/eliminar-poster', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'eliminarPoster'])->name('anteproyectos.eliminarPoster');
+      Route::delete('/anteproyectos/{id}/eliminar-video', [App\Http\Controllers\Aprendiz\AnteproyectoController::class, 'eliminarVideo'])->name('anteproyectos.eliminarVideo');
+      
   
 });
 

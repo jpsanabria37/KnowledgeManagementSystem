@@ -11,6 +11,7 @@ use App\Models\Semillero;
 use App\Models\Producto;
 use Illuminate\Support\Facades\Auth; // Agrega esta línea para importar Auth
 use Barryvdh\DomPDF\Facade\Pdf; // Importa la clase para generar PDFs
+use Illuminate\Support\Facades\Storage;
 
 class AnteproyectoController extends Controller
 {
@@ -297,6 +298,96 @@ public function buscar(Request $request)
     // Devolver la vista con los resultados
     return view('aprendiz.resultados', compact('resultados', 'term'));
 }
+
+public function subirPoster(Request $request, $id)
+{
+    $request->validate([
+        'poster' => [
+            'required',
+            'file',
+            'mimes:pptx,docx,pdf', // Extensiones válidas
+            'max:5120', // Tamaño máximo 5 MB
+        ],
+    ], [
+        'poster.required' => 'El archivo del póster es obligatorio.',
+        'poster.file' => 'El póster debe ser un archivo válido.',
+        'poster.mimes' => 'El póster debe ser de tipo PPTX, DOCX o PDF.',
+        'poster.max' => 'El póster no puede exceder los 5 MB.',
+    ]);
+
+    $anteproyecto = Anteproyecto::findOrFail($id);
+
+    // Eliminar póster existente si hay uno
+    if ($anteproyecto->poster_path) {
+        Storage::disk('public')->delete($anteproyecto->poster_path);
+    }
+
+    // Subir el nuevo póster
+    $path = $request->file('poster')->store('posters', 'public');
+    $anteproyecto->poster_path = $path;
+    $anteproyecto->save();
+
+    return redirect()->back()->with('success', 'Póster subido correctamente.');
+}
+
+public function subirVideo(Request $request, $id)
+{
+    $request->validate([
+        'video' => [
+            'required',
+            'file',
+            'mimes:mp4,avi,mov,wmv', // Extensiones válidas
+            'max:51200', // Tamaño máximo 50 MB
+        ],
+    ], [
+        'video.required' => 'El archivo de video es obligatorio.',
+        'video.file' => 'El video debe ser un archivo válido.',
+        'video.mimes' => 'El video debe ser de tipo MP4, AVI, MOV o WMV.',
+        'video.max' => 'El video no puede exceder los 50 MB.',
+    ]);
+
+    $anteproyecto = Anteproyecto::findOrFail($id);
+
+    // Eliminar video existente si hay uno
+    if ($anteproyecto->video_path) {
+        Storage::disk('public')->delete($anteproyecto->video_path);
+    }
+
+    // Subir el nuevo video
+    $videoPath = $request->file('video')->store('videos', 'public');
+    $anteproyecto->video_path = $videoPath;
+    $anteproyecto->save();
+
+    return redirect()->back()->with('success', 'Video subido correctamente.');
+}
+
+
+
+    public function eliminarPoster($id)
+    {
+        $anteproyecto = Anteproyecto::findOrFail($id);
+
+        if ($anteproyecto->poster_path) {
+            Storage::delete($anteproyecto->poster_path);
+            $anteproyecto->poster_path = null;
+            $anteproyecto->save();
+        }
+
+        return redirect()->back()->with('success', 'Póster eliminado correctamente.');
+    }
+
+    public function eliminarVideo($id)
+    {
+        $anteproyecto = Anteproyecto::findOrFail($id);
+
+        if ($anteproyecto->video_path) {
+            Storage::delete($anteproyecto->video_path);
+            $anteproyecto->video_path = null;
+            $anteproyecto->save();
+        }
+
+        return redirect()->back()->with('success', 'Video eliminado correctamente.');
+    }
 
 
 }

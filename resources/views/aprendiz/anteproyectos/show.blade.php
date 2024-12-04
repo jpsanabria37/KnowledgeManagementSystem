@@ -111,7 +111,7 @@
 
         <!-- Sección de Relaciones (Semillero, Grupo de Investigación, Centro) -->
         <div class="mt-8 bg-gray-50 p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Información Adicional</h2>
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Información Adicional</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Semillero -->
                 @if($anteproyecto->semillero)
@@ -131,13 +131,67 @@
 
                 <!-- Centro -->
                 @if($anteproyecto->semillero && $anteproyecto->semillero->grupoLinea->grupo->centro)
-                    <div>
+                    <div class="mb-5">
                         <h3 class="text-lg font-semibold text-gray-700">Centro</h3>
                         <p class="text-gray-600">{{ $anteproyecto->semillero->grupoLinea->grupo->centro->nombre_centro }}  - {{ $anteproyecto->semillero->grupoLinea->grupo->centro->regional->nombre_regional}}</p>
                     </div>
                 @endif
             </div>
+
+    <!-- Mostrar póster -->
+    @if($anteproyecto->poster_path)
+        <div>
+            <h3 class="text-lg font-semibold text-gray-700">Póster</h3>
+            <a href="{{ Storage::url($anteproyecto->poster_path) }}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Ver Póster</a>
+            <form method="POST" action="{{ route('aprendiz.anteproyectos.eliminarPoster', $anteproyecto->id) }}" class="inline-block ml-4">
+                @csrf
+                @method('DELETE')
+                <button class="text-red-600 underline hover:text-red-800">Eliminar</button>
+            </form>
         </div>
+    @else
+        <form id="posterForm" method="POST" action="{{ route('aprendiz.anteproyectos.subirPoster', $anteproyecto->id) }}" enctype="multipart/form-data">
+            @csrf
+            <label for="poster" class="block text-gray-700">Subir Póster</label>
+            <input type="file" name="poster" id="poster" class="block mt-2 mb-4" accept=".pptx,.docx,.pdf">
+            <span id="posterError" class="text-red-600 text-sm"></span>
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Subir</button>
+        </form>
+    @endif
+
+    <!-- Mostrar video -->
+    @if($anteproyecto->video_path)
+        <div class="mt-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Video</h3>
+            <div class="flex flex-col items-center">
+
+                <div class="flex mt-4 gap-4">
+                    <a href="{{ Storage::url($anteproyecto->video_path) }}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        Ver en Otra Pestaña
+                    </a>
+                    <a href="{{ Storage::url($anteproyecto->video_path) }}" download class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                        Descargar Video
+                    </a>
+                </div>
+            </div>
+            <form method="POST" action="{{ route('aprendiz.anteproyectos.eliminarVideo', $anteproyecto->id) }}" class="mt-4">
+                @csrf
+                @method('DELETE')
+                <button class="text-red-600 underline hover:text-red-800">Eliminar</button>
+            </form>
+        </div>
+    @else
+        <form id="videoForm" method="POST" action="{{ route('aprendiz.anteproyectos.subirVideo', $anteproyecto->id) }}" enctype="multipart/form-data">
+            @csrf
+            <label for="video" class="block text-gray-700">Subir Video</label>
+            <input type="file" name="video" id="video" class="block mt-2 mb-4" accept="video/mp4,video/avi,video/mov,video/wmv">
+            <span id="videoError" class="text-red-600 text-sm"></span>
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Subir</button>
+        </form>
+    @endif
+</div>
+
+
 
         <!-- Botones de Acciones -->
         <div class="mt-6 flex gap-4">
@@ -149,4 +203,61 @@
             </a>
         </div>
     </div>
+
+    <script>
+  // Validación del póster
+document.getElementById('posterForm').addEventListener('submit', function(e) {
+    const posterInput = document.getElementById('poster');
+    const posterError = document.getElementById('posterError');
+
+    posterError.textContent = ''; // Limpiar error previo
+
+    if (posterInput.files.length === 0) {
+        posterError.textContent = 'Por favor, selecciona un archivo.';
+        e.preventDefault();
+        return;
+    }
+
+    const allowedExtensions = ['pptx', 'docx', 'pdf'];
+    const fileSizeLimit = 5 * 1024 * 1024; // 5 MB
+    const file = posterInput.files[0];
+    const extension = file.name.split('.').pop().toLowerCase();
+
+    if (!allowedExtensions.includes(extension)) {
+        posterError.textContent = 'Solo se permiten archivos PPTX, DOCX o PDF.';
+        e.preventDefault();
+    } else if (file.size > fileSizeLimit) {
+        posterError.textContent = 'El archivo no debe superar los 5 MB.';
+        e.preventDefault();
+    }
+});
+
+// Validación del video
+document.getElementById('videoForm').addEventListener('submit', function(e) {
+    const videoInput = document.getElementById('video');
+    const videoError = document.getElementById('videoError');
+
+    videoError.textContent = ''; // Limpiar error previo
+
+    if (videoInput.files.length === 0) {
+        videoError.textContent = 'Por favor, selecciona un archivo.';
+        e.preventDefault();
+        return;
+    }
+
+    const allowedExtensions = ['mp4', 'avi', 'mov', 'wmv'];
+    const fileSizeLimit = 50 * 1024 * 1024; // 50 MB
+    const file = videoInput.files[0];
+    const extension = file.name.split('.').pop().toLowerCase();
+
+    if (!allowedExtensions.includes(extension)) {
+        videoError.textContent = 'Solo se permiten archivos MP4, AVI, MOV o WMV.';
+        e.preventDefault();
+    } else if (file.size > fileSizeLimit) {
+        videoError.textContent = 'El archivo no debe superar los 50 MB.';
+        e.preventDefault();
+    }
+});
+
+</script>
 @endsection
