@@ -109,100 +109,106 @@
 </div>
 
 
-        <!-- Sección de Relaciones (Semillero, Grupo de Investigación, Centro) -->
-        <div class="mt-8 bg-gray-50 p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">Información Adicional</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Semillero -->
-                @if($anteproyecto->semillero)
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-700">Semillero</h3>
-                        <p class="text-gray-600">{{ $anteproyecto->semillero->nombre_semillero }}</p>
-                    </div>
-                @endif
-
-                <!-- Grupo de Investigación -->
-                @if($anteproyecto->semillero && $anteproyecto->semillero->grupoLinea->grupo->nombre_grupo)
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-700">Grupo de Investigación</h3>
-                        <p class="text-gray-600">{{ $anteproyecto->semillero->grupoLinea->grupo->nombre_grupo }}</p>
-                    </div>
-                @endif
-
-                <!-- Centro -->
-                @if($anteproyecto->semillero && $anteproyecto->semillero->grupoLinea->grupo->centro)
-                    <div class="mb-5">
-                        <h3 class="text-lg font-semibold text-gray-700">Centro</h3>
-                        <p class="text-gray-600">{{ $anteproyecto->semillero->grupoLinea->grupo->centro->nombre_centro }}  - {{ $anteproyecto->semillero->grupoLinea->grupo->centro->regional->nombre_regional}}</p>
-                    </div>
-                @endif
+<!-- Sección de Relaciones (Semillero, Grupo de Investigación, Centro) -->
+<div class="mt-8 bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+    <h2 class="text-3xl font-extrabold text-gray-800 mb-6 border-b pb-4">Información Adicional</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Semillero -->
+        @if($anteproyecto->semillero)
+            <div>
+                <h3 class="text-xl font-semibold text-gray-700">Semillero</h3>
+                <p class="text-gray-600 text-sm mt-2">{{ $anteproyecto->semillero->nombre_semillero }}</p>
             </div>
+        @endif
 
-    <!-- Mostrar póster -->
-    @if($anteproyecto->poster_path)
-        <div>
-            <h3 class="text-lg font-semibold text-gray-700">Póster</h3>
-            <a href="{{ Storage::url($anteproyecto->poster_path) }}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Ver Póster</a>
-            <form method="POST" action="{{ route('aprendiz.anteproyectos.eliminarPoster', $anteproyecto->id) }}" class="inline-block ml-4">
+        <!-- Grupo de Investigación -->
+        @if($anteproyecto->semillero && $anteproyecto->semillero->grupoLinea->grupo->nombre_grupo)
+            <div>
+                <h3 class="text-xl font-semibold text-gray-700">Grupo de Investigación</h3>
+                <p class="text-gray-600 text-sm mt-2">{{ $anteproyecto->semillero->grupoLinea->grupo->nombre_grupo }}</p>
+            </div>
+        @endif
+
+        <!-- Centro -->
+        @if($anteproyecto->semillero && $anteproyecto->semillero->grupoLinea->grupo->centro)
+            <div>
+                <h3 class="text-xl font-semibold text-gray-700">Centro</h3>
+                <p class="text-gray-600 text-sm mt-2">{{ $anteproyecto->semillero->grupoLinea->grupo->centro->nombre_centro }} - {{ $anteproyecto->semillero->grupoLinea->grupo->centro->regional->nombre_regional }}</p>
+            </div>
+        @endif
+    </div>
+
+    <!-- Póster -->
+    <div class="mt-8">
+        <h3 class="text-xl font-semibold text-gray-700">Póster</h3>
+        @if($anteproyecto->poster_path)
+            <div class="mt-4 flex gap-4 items-center">
+                <a href="{{ Storage::url($anteproyecto->poster_path) }}" target="_blank" class="bg-blue-600 text-white px-5 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200">
+                    Ver Póster
+                </a>
+                <form method="POST" action="{{ route('aprendiz.anteproyectos.eliminarPoster', $anteproyecto->id) }}">
+                    @csrf
+                    @method('DELETE')
+                    <button class="text-red-600 underline hover:text-red-800">Eliminar</button>
+                </form>
+            </div>
+        @else
+            <form id="posterForm" method="POST" action="{{ route('aprendiz.anteproyectos.subirPoster', $anteproyecto->id) }}" enctype="multipart/form-data" class="mt-4">
                 @csrf
-                @method('DELETE')
-                <button class="text-red-600 underline hover:text-red-800">Eliminar</button>
+                <label for="poster" class="block text-gray-700 font-medium">Subir Póster</label>
+                <input type="file" name="poster" id="poster" class="mt-2 w-full border rounded p-2 text-gray-700" accept=".pptx,.docx,.pdf">
+                <span id="posterError" class="text-red-600 text-sm mt-2"></span>
+                <button type="submit" class="mt-4 bg-green-600 text-white px-5 py-2 rounded-md shadow hover:bg-green-700 transition duration-200">
+                    Subir
+                </button>
             </form>
-        </div>
-    @else
-        <form id="posterForm" method="POST" action="{{ route('aprendiz.anteproyectos.subirPoster', $anteproyecto->id) }}" enctype="multipart/form-data">
-            @csrf
-            <label for="poster" class="block text-gray-700">Subir Póster</label>
-            <input type="file" name="poster" id="poster" class="block mt-2 mb-4" accept=".pptx,.docx,.pdf">
-            <span id="posterError" class="text-red-600 text-sm"></span>
-            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Subir</button>
-        </form>
-    @endif
+        @endif
+    </div>
 
-    <!-- Mostrar video -->
-    @if($anteproyecto->video_path)
-        <div class="mt-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4">Video</h3>
-            <div class="flex flex-col items-center">
-
-                <div class="flex mt-4 gap-4">
-                    <a href="{{ Storage::url($anteproyecto->video_path) }}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+    <!-- Video -->
+    <div class="mt-8">
+        <h3 class="text-xl font-semibold text-gray-700">Video</h3>
+        @if($anteproyecto->video_path)
+            <div class="flex flex-col mt-4 gap-4 items-center">
+                <div class="flex gap-4">
+                    <a href="{{ Storage::url($anteproyecto->video_path) }}" target="_blank" class="bg-blue-600 text-white px-5 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200">
                         Ver en Otra Pestaña
                     </a>
-                    <a href="{{ Storage::url($anteproyecto->video_path) }}" download class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                    <a href="{{ Storage::url($anteproyecto->video_path) }}" download class="bg-gray-600 text-white px-5 py-2 rounded-md shadow hover:bg-gray-700 transition duration-200">
                         Descargar Video
                     </a>
                 </div>
+                <form method="POST" action="{{ route('aprendiz.anteproyectos.eliminarVideo', $anteproyecto->id) }}" class="mt-4">
+                    @csrf
+                    @method('DELETE')
+                    <button class="text-red-600 underline hover:text-red-800">Eliminar</button>
+                </form>
             </div>
-            <form method="POST" action="{{ route('aprendiz.anteproyectos.eliminarVideo', $anteproyecto->id) }}" class="mt-4">
+        @else
+            <form id="videoForm" method="POST" action="{{ route('aprendiz.anteproyectos.subirVideo', $anteproyecto->id) }}" enctype="multipart/form-data" class="mt-4">
                 @csrf
-                @method('DELETE')
-                <button class="text-red-600 underline hover:text-red-800">Eliminar</button>
+                <label for="video" class="block text-gray-700 font-medium">Subir Video</label>
+                <input type="file" name="video" id="video" class="mt-2 w-full border rounded p-2 text-gray-700" accept="video/mp4,video/avi,video/mov,video/wmv">
+                <span id="videoError" class="text-red-600 text-sm mt-2"></span>
+                <button type="submit" class="mt-4 bg-green-600 text-white px-5 py-2 rounded-md shadow hover:bg-green-700 transition duration-200">
+                    Subir
+                </button>
             </form>
-        </div>
-    @else
-        <form id="videoForm" method="POST" action="{{ route('aprendiz.anteproyectos.subirVideo', $anteproyecto->id) }}" enctype="multipart/form-data">
-            @csrf
-            <label for="video" class="block text-gray-700">Subir Video</label>
-            <input type="file" name="video" id="video" class="block mt-2 mb-4" accept="video/mp4,video/avi,video/mov,video/wmv">
-            <span id="videoError" class="text-red-600 text-sm"></span>
-            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Subir</button>
-        </form>
-    @endif
-</div>
+        @endif
+    </div>
 
-
-
-        <!-- Botones de Acciones -->
-        <div class="mt-6 flex gap-4">
-            <a href="{{ route('aprendiz.anteproyectos.index') }}" class="inline-block bg-blue-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-800">
-                Volver a Mis Anteproyectos
-            </a>
-            <a href="{{ route('aprendiz.anteproyectos.generarPdf', $anteproyecto->id) }}" class="inline-block bg-red-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-600">
-                Generar PDF
-            </a>
+    <!-- Botones de acciones -->
+    <div class="mt-8 flex gap-6">
+        <a href="{{ route('aprendiz.anteproyectos.index') }}" class="inline-block bg-blue-700 text-white font-semibold py-3 px-6 rounded-md shadow hover:bg-blue-800 transition duration-200">
+            Volver a Mis Anteproyectos
+        </a>
+        <a href="{{ route('aprendiz.anteproyectos.generarPdf', $anteproyecto->id) }}" class="inline-block bg-red-500 text-white font-semibold py-3 px-6 rounded-md shadow hover:bg-red-600 transition duration-200">
+            Generar PDF
+        </a>
         </div>
     </div>
+
 
     <script>
   // Validación del póster
