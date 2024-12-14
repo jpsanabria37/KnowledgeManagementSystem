@@ -111,33 +111,74 @@
 
         <!-- Sección de Relaciones (Semillero, Grupo de Investigación, Centro) -->
         <div class="mt-8 bg-gray-50 p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Información Adicional</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Semillero -->
-                @if($anteproyecto->semillero)
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-700">Semillero</h3>
-                        <p class="text-gray-600">{{ $anteproyecto->semillero->nombre_semillero }}</p>
-                    </div>
-                @endif
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Información Adicional</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Semillero -->
+        @if($anteproyecto->semillero)
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700">Semillero</h3>
+                <p class="text-gray-600">{{ $anteproyecto->semillero->nombre_semillero }}</p>
+            </div>
+        @endif
 
-                <!-- Grupo de Investigación -->
-                @if($anteproyecto->semillero && $anteproyecto->semillero->grupoLinea->grupo->nombre_grupo)
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-700">Grupo de Investigación</h3>
-                        <p class="text-gray-600">{{ $anteproyecto->semillero->grupoLinea->grupo->nombre_grupo }}</p>
-                    </div>
-                @endif
+        <!-- Grupo de Investigación -->
+        @if($anteproyecto->semillero && $anteproyecto->semillero->grupoLinea->grupo->nombre_grupo)
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700">Grupo de Investigación</h3>
+                <p class="text-gray-600">{{ $anteproyecto->semillero->grupoLinea->grupo->nombre_grupo }}</p>
+            </div>
+        @endif
 
-                <!-- Centro -->
-                @if($anteproyecto->semillero && $anteproyecto->semillero->grupoLinea->grupo->centro)
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-700">Centro</h3>
-                        <p class="text-gray-600">{{ $anteproyecto->semillero->grupoLinea->grupo->centro->nombre_centro }}  - {{ $anteproyecto->semillero->grupoLinea->grupo->centro->regional->nombre_regional}}</p>
+        <!-- Centro -->
+        @if($anteproyecto->semillero && $anteproyecto->semillero->grupoLinea->grupo->centro)
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700">Centro</h3>
+                <p class="text-gray-600">
+                    {{ $anteproyecto->semillero->grupoLinea->grupo->centro->nombre_centro }} - 
+                    {{ $anteproyecto->semillero->grupoLinea->grupo->centro->regional->nombre_regional }}
+                </p>
+            </div>
+        @endif
+    </div>
+
+    <div class="mt-6">
+        <h3 class="text-xl font-semibold text-gray-800">Archivos Adjuntos</h3>
+        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Póster -->
+            <div>
+                <h4 class="text-lg font-semibold text-gray-700">Póster</h4>
+                @if($anteproyecto->poster_path && file_exists(public_path($anteproyecto->poster_path)))
+                    <a href="{{ asset($anteproyecto->poster_path) }}" target="_blank" 
+                        class="text-blue-600 underline hover:text-blue-800">
+                        Ver Póster
+                    </a>
+                @else
+                    <p class="text-gray-600 italic">No se ha cargado un póster para este anteproyecto.</p>
+                @endif
+            </div>
+
+            <!-- Video -->
+            <div>
+                <h4 class="text-lg font-semibold text-gray-700">Video</h4>
+                @if($anteproyecto->video_path && file_exists(public_path($anteproyecto->video_path)))
+                    <div class="flex flex-col space-y-2">
+                        <video controls class="w-full max-h-64 rounded-md shadow-md">
+                            <source src="{{ asset($anteproyecto->video_path) }}" type="video/mp4">
+                            Tu navegador no soporta la reproducción de este video.
+                        </video>
+                        <a href="{{ asset($anteproyecto->video_path) }}" target="_blank" 
+                           class="bg-blue-600 text-white px-4 py-2 text-sm rounded-md text-center hover:bg-blue-700">
+                            Ver en Otra Pestaña
+                        </a>
                     </div>
+                @else
+                    <p class="text-gray-600 italic">No se ha cargado un video para este anteproyecto.</p>
                 @endif
             </div>
         </div>
+</div>
+</div>
+
 
         <!-- Botones de Acciones -->
         <div class="mt-6 flex gap-4">

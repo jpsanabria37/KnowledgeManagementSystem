@@ -30,7 +30,9 @@ class Anteproyecto extends Model
         'user_id', // Nuevo campo para el usuario creador
         'colaboradores', // Nuevo campo para colaboradores adicionales
         'paso_actual',
-        'estado_creacion'
+        'estado_creacion',
+        'poster_path',
+        'video_path'
     ];
 
     protected $casts = [
