@@ -36,12 +36,15 @@
         }
 
         /* Contenedor principal */
-        .container {
+        .content-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             text-align: center;
-            padding: 3rem;
+            padding: 3rem 1rem;
+            max-width: 100%;
+            box-sizing: border-box;
             animation: fadeIn 1.5s ease-in-out;
         }
 
@@ -107,7 +110,7 @@
     </header>
 
     <!-- Contenedor principal -->
-    <div class="container">
+    <div class="content-container">
         <div class="button-group">
             <a href="{{ route('login') }}">Iniciar Sesión</a>
             <a href="{{ route('register') }}">Registrarse</a>
