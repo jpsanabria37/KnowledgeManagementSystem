@@ -20,7 +20,7 @@ class GrupoInvestigacionSeeder extends Seeder
 
         foreach ($centros as $centro) {
             GrupoInvestigacion::create([
-                'nombre' => 'Grupo de Investigación ' . $centro->nombre,
+                'nombre_grupo' => 'Grupo de Investigación ' . $centro->nombre_centro,
                 'centro_id' => $centro->id,
             ]);
         }

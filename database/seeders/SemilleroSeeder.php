@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\GrupoInvestigacion;
+use App\Models\GrupoLinea;
 use App\Models\LineaInvestigacion;
 use App\Models\Semillero;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,12 +17,18 @@ class SemilleroSeeder extends Seeder
     public function run(): void
     {
         //
-        $lineas = LineaInvestigacion::all();
+        $grupos = GrupoInvestigacion::all();
+        $linea = LineaInvestigacion::first();
 
-        foreach ($lineas as $linea) {
+        foreach ($grupos as $grupo) {
+            $grupoLinea = GrupoLinea::create([
+                'grupo_id' => $grupo->id,
+                'linea_id' => $linea->id,
+            ]);
+
             Semillero::create([
-                'nombre' => 'Semillero ' . $linea->nombre,
-                'linea_investigacion_id' => $linea->id,
+                'nombre_semillero' => 'Semillero ' . $grupo->nombre_grupo,
+                'grupo_linea_id' => $grupoLinea->id,
             ]);
         }
     }
