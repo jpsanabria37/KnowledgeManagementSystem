@@ -65,7 +65,7 @@
                 </table>
 
                 <div class="d-flex justify-content-center">
-                    {{ $grupos->links() }}
+                    {{ $grupos->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>

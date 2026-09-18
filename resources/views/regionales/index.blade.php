@@ -80,7 +80,7 @@
 
                 <!-- Paginación -->
                 <div class="d-flex justify-content-center">
-                    {{ $regionales->withQueryString()->links() }}
+                    {{ $regionales->withQueryString()->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>

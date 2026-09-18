@@ -58,7 +58,7 @@
                 </table>
 
                 <div class="d-flex justify-content-center">
-                    {{ $lineas->links() }}
+                    {{ $lineas->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>

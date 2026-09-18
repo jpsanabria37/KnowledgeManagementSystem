@@ -80,7 +80,7 @@
 
                 <!-- Paginación -->
                 <div class="d-flex justify-content-center">
-                    {{ $centros->withQueryString()->links() }}
+                    {{ $centros->withQueryString()->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>
